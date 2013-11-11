@@ -240,7 +240,14 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
   protected void onResume() {
     super.onResume();
     trackDataHub.loadTrack(trackId);
-
+    
+    // User story id: 60161552
+    // If a newly recorded track has been discarded, this activity should be finished.
+    // If the track has been deleted, the track wont exist in the database and getTrack
+    // returns null.
+    if(myTracksProviderUtils.getTrack(trackId) == null)
+      finish();
+      
     // Update UI
     ApiAdapterFactory.getApiAdapter().invalidMenu(this);
     boolean isRecording = trackId == recordingTrackId;
