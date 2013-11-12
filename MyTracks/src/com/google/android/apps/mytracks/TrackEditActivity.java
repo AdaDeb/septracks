@@ -202,8 +202,7 @@ public class TrackEditActivity extends AbstractMyTracksActivity
 
       // User story id: 60161552
       // If it is a new track, the cancel button will be used for discarding a track.
-      //TODO: Policy about strings.
-      cancel.setText("Discard track");
+      cancel.setText(R.string.generic_discard_track);
       cancel.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
