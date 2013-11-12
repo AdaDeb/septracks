@@ -34,6 +34,13 @@ public class ChartSettingsActivity extends AbstractSettingsActivity {
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     addPreferencesFromResource(R.xml.chart_settings);
+    
+//    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//    String test = sharedPrefs.getString("updates_interval", null);
+//    System.out.println("The tes is: " + test );
+//    
+    
   }
 
   @Override
