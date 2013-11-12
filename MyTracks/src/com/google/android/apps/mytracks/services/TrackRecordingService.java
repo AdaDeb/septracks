@@ -601,7 +601,6 @@ public class TrackRecordingService extends Service {
     
     // TODO
     PaceListener paceListener = PaceFactory.getPaceListener();
-    paceListener.setContext(context);
     trackTripStatisticsUpdater.setPaceListener(paceListener);
 
     // Insert a track
