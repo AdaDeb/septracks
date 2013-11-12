@@ -265,12 +265,12 @@ limitations under the License.
     <item>@string/waypoint_type_waypoint</item>
   </string-array>
 
-   <string-array name="updateInterval">
+   <string-array name="x_axis_units">
         <item name="1000">Time</item>
         <item name="5000">Distance</item>
     </string-array>
     
-    <string-array name="updateIntervalValues">
+    <string-array name="x_axis_units_value">
         <item name="1000">1000</item>
         <item name="5000">5000</item>
     </string-array>
