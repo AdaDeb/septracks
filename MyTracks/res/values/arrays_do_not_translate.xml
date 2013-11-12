@@ -266,13 +266,13 @@ limitations under the License.
   </string-array>
 
    <string-array name="x_axis_units">
-        <item name="1000">Time</item>
-        <item name="5000">Distance</item>
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
     </string-array>
     
     <string-array name="x_axis_units_value">
-        <item name="1000">1000</item>
-        <item name="5000">5000</item>
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
     </string-array>
   
 </resources>

@@ -26,6 +26,7 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.content.Waypoint;
+import com.google.android.apps.mytracks.settings.ChartSettingsActivity;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.stats.TripStatisticsUpdater;
 import com.google.android.apps.mytracks.util.LocationUtils;
@@ -73,7 +74,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   private boolean[] chartShow = new boolean[] { true, true, true, true, true, true };
 
   // UI elements
-  private ChartView chartView;
+  public static ChartView chartView;
   private ZoomControls zoomControls;
 
   /**
@@ -81,7 +82,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
    * appropriate and redraw.
    */
   private final Runnable updateChart = new Runnable() {
-      @Override
+    @Override
     public void run() {
       if (!isResumed() || trackDataHub == null) {
         return;
@@ -111,13 +112,13 @@ public class ChartFragment extends Fragment implements TrackDataListener {
     View view = inflater.inflate(R.layout.chart, container, false);
     zoomControls = (ZoomControls) view.findViewById(R.id.chart_zoom_controls);
     zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
-        @Override
+      @Override
       public void onClick(View v) {
         zoomIn();
       }
     });
     zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
-        @Override
+      @Override
       public void onClick(View v) {
         zoomOut();
       }
@@ -173,7 +174,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       pendingPoints.clear();
       chartView.reset();
       getActivity().runOnUiThread(new Runnable() {
-          @Override
+        @Override
         public void run() {
           if (isResumed()) {
             chartView.resetScroll();
@@ -245,7 +246,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       metricUnits = metric;
       chartView.setMetricUnits(metricUnits);
       getActivity().runOnUiThread(new Runnable() {
-          @Override
+        @Override
         public void run() {
           if (isResumed()) {
             chartView.requestLayout();
@@ -270,7 +271,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed);
       setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed);
       getActivity().runOnUiThread(new Runnable() {
-          @Override
+        @Override
         public void run() {
           if (isResumed()) {
             chartView.requestLayout();
@@ -287,7 +288,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
     // We don't care.
     return false;
   }
-  
+
   @Override
   public boolean onRecordingDistanceIntervalChanged(int value) {
     if (isResumed()) {
@@ -303,15 +304,35 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   /**
    * Checks the chart settings.
    */
+  
   private void checkChartSettings() {
-    boolean needUpdate = false;
-    if (chartByDistance != PreferencesUtils.getBoolean(getActivity(),
-        R.string.chart_by_distance_key, PreferencesUtils.CHART_BY_DISTANCE_DEFAULT)) {
-      chartByDistance = !chartByDistance;
-      chartView.setChartByDistance(chartByDistance);
-      reloadTrackDataHub();
-      needUpdate = true;
+    boolean needUpdate = false; 
+    
+    //Checks if Distance or Time is selected as unit in 
+    //ListPreference found in ChartSettingsActivity
+    //and updates the track charts X-Axis accordingly
+    
+    if(ChartSettingsActivity.xAxisUnit.equals("Distance")){
+      chartView.setChartByDistance(true);
+            reloadTrackDataHub();
+            needUpdate = true;
     }
+    if(ChartSettingsActivity.xAxisUnit.equals("Time")){
+      chartView.setChartByDistance(false);
+            reloadTrackDataHub();
+            needUpdate = true;
+    }
+
+    //Old way of setting preferences
+    
+    //    if (chartByDistance != PreferencesUtils.getBoolean(getActivity(),
+    //        R.string.chart_by_distance_key, PreferencesUtils.CHART_BY_DISTANCE_DEFAULT)) {
+    //      chartByDistance = !chartByDistance;
+    //      chartView.setChartByDistance(chartByDistance);
+    //      reloadTrackDataHub();
+    //      needUpdate = true;
+    //    }
+    
     if (setSeriesEnabled(ChartView.ELEVATION_SERIES, PreferencesUtils.getBoolean(getActivity(),
         R.string.chart_show_elevation_key, PreferencesUtils.CHART_SHOW_ELEVATION_DEFAULT))) {
       needUpdate = true;

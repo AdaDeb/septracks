@@ -16,15 +16,15 @@ limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/track_detail_chart_tab" >
-    <PreferenceCategory android:title="X-axis" >      
-        <ListPreference 
-            android:key="x-axis"
-            android:title="@string/settings_chart_x_axis"
-            android:summary="Set which unit is displayed on the X-axis"
-            android:defaultValue="1000" 
+
+    <PreferenceCategory android:title="X-axis" >
+        <ListPreference
+            android:defaultValue="1000"
             android:entries="@array/x_axis_units"
             android:entryValues="@array/x_axis_units_value"
-        />
+            android:key="x-axis"
+            android:summary="Set which unit is displayed on the X-axis"
+            android:title="@string/settings_chart_x_axis" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_chart_y_axis" >
         <CheckBoxPreference

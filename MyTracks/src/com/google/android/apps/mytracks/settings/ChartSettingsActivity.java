@@ -21,6 +21,7 @@ import com.google.android.maps.mytracks.R;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 
 /**
  * An activity for accessing chart settings.
@@ -29,18 +30,25 @@ import android.preference.CheckBoxPreference;
  */
 public class ChartSettingsActivity extends AbstractSettingsActivity {
 
+  public static String xAxisUnit = "Distance";
+
   @SuppressWarnings("deprecation")
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     addPreferencesFromResource(R.xml.chart_settings);
+  }
+
+  @Override
+  protected void onStop() {
     
-//    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//    String test = sharedPrefs.getString("updates_interval", null);
-//    System.out.println("The tes is: " + test );
-//    
-    
+    //Workaround for updating the track charts X-Axis
+    ListPreference lp = (ListPreference) findPreference("x-axis");
+    if(lp.getValue().equals("Time"))
+      xAxisUnit = "Time";
+    else 
+      xAxisUnit = "Distance";
+    super.onStop();
   }
 
   @Override
