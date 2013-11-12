@@ -264,5 +264,11 @@ limitations under the License.
     <item>@string/waypoint_type_water_fountain</item>
     <item>@string/waypoint_type_waypoint</item>
   </string-array>
+  <string-array name="pace_keeper_pace_values">
+      <item >-1</item>
+      <item >1</item>
+      <item >2</item>
+      <item >3</item>
+  </string-array>
 
 </resources>

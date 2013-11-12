@@ -40,6 +40,10 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
 
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
 
+    configListPreference(R.string.target_pace_key,
+        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT,
+        R.array.pace_keeper_pace_values, metricUnits);
+    
     configFrequencyPreference(R.string.voice_frequency_key,
         PreferencesUtils.VOICE_FREQUENCY_DEFAULT, R.array.frequency_values, metricUnits);
     configFrequencyPreference(R.string.split_frequency_key,
@@ -61,6 +65,8 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
     configListPreference(R.string.auto_resume_track_timeout_key,
         PreferencesUtils.AUTO_RESUME_TRACK_TIMEOUT_DEFAULT,
         R.array.auto_resume_track_timeout_values, metricUnits);
+    
+    
   }
 
   @SuppressWarnings("deprecation")
@@ -127,12 +133,24 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
       case R.string.auto_resume_track_timeout_key:
         setAutoResumeTrackTimeoutSummaryAndOptions(summary, options, values);
         break;
+      case R.string.target_pace_key:
+        setTargetPaceSummaryAndOptions(summary, options, values);
+        break;
       default:
         return;
     }
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);
   }
 
+  private void setTargetPaceSummaryAndOptions(String[] summary, String[] options, String[] values){
+    for (int i = 0; i < values.length; i++) {
+      int value = Integer.parseInt(values[i]);
+      options[i] = value + " m/s";  // TODO externalize string (if this method is kept)   
+      summary[i] = value + " m/s";
+    }
+  } 
+  
+  
   /**
    * Sets the min recording interval summary and options.
    * 

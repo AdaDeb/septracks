@@ -90,4 +90,6 @@ limitations under the License.
   <string name="settings_sensor_root_key">settingsSensorRoot</string>
   <string name="settings_sharing_key">settingsSharing</string>
   <string name="settings_stats_key">settingsStats</string>
+  <string name="target_pace_key">targetPaceKey</string>
+  <string name="target_pace_reminder_frequency_key">targetPaceReminderFrequencyKey</string>
 </resources>

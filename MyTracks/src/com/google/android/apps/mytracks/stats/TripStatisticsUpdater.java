@@ -230,7 +230,7 @@ public class TripStatisticsUpdater {
     } else if (isValidSpeed(time, speed, lastLocationTime, lastLocationSpeed)) {
       Log.v(TAG, "speed is valid, here we go");
       speedBuffer.setNext(speed);
-      if (paceListener != null){ // TODO figure out more elgant way
+      if (paceListener != null){ // TODO figure out more elegant way
         paceListener.updateSpeed(speed);
       }
       if (speedBuffer.isFull() && speedBuffer.getAverage() > currentSegment.getMaxSpeed()) {
