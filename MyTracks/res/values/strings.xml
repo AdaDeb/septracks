@@ -1566,7 +1566,21 @@ limitations under the License.
       either by distance or by time.
 
       Character limit: ~23 (1 line)">
-    X axis
+    X-axis
+  </string>
+  
+    <string name="settings_chart_y_axis"
+    translation_description="In the 'Chart' settings, the option to change the y axis display.
+
+      Character limit: ~23 (1 line)">
+    Y-axis
+  </string>
+  
+        <string name="settings_chart_y_axis_external"
+    translation_description="In the 'Chart' settings, the option to change the y axis display.
+
+      Character limit: ~23 (1 line)">
+    Y-axis (Dependent on external hardware)
   </string>
 
   <!-- Settings Google -->
