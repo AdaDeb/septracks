@@ -53,4 +53,8 @@ limitations under the License.
     android:defaultValue="10"
     android:key="@string/auto_resume_track_timeout_key"
     android:title="@string/settings_recording_auto_resume_track_timeout_title" />
+  <com.google.android.apps.mytracks.IntegerListPreference
+    android:defaultValue="1"
+    android:key="@string/target_pace_key"
+    android:title="@string/settings_target_pace_title" />
 </PreferenceScreen>
