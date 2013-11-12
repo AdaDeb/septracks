@@ -788,6 +788,10 @@ limitations under the License.
       %1$s description. E.g., 'At the top'.">
     Description: %1$s
   </string>
+  <string name="generic_discard_track"
+    translation_description="The text on a button to say discard track.">
+    Discard Track
+  </string>
   <string name="generic_do_not_show_again"
     translation_description="When showing a confirmation message, the message in the footer checkbox
       to not show the message again.">
