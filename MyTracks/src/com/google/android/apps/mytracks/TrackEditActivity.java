@@ -190,6 +190,8 @@ public class TrackEditActivity extends AbstractMyTracksActivity
     });
 
     Button cancel = (Button) findViewById(R.id.track_edit_cancel);
+    
+   // Check if new or existing track.
     if (getIntent().getBooleanExtra(EXTRA_NEW_TRACK, false)) {
       String trackName = TrackNameUtils.getTrackName(
           this, -1L, -1L, myTracksProviderUtils.getFirstValidTrackPoint(trackId));
@@ -197,7 +199,19 @@ public class TrackEditActivity extends AbstractMyTracksActivity
         name.setText(trackName);
       }
       setTitle(R.string.track_edit_new_track_title);
-      cancel.setVisibility(View.GONE);
+
+      // User story id: 60161552
+      // If it is a new track, the cancel button will be used for discarding a track.
+      //TODO: Policy about strings.
+      cancel.setText("Discard track");
+      cancel.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          // Deletes the track.
+          myTracksProviderUtils.deleteTrack(track.getId());
+          finish();
+        }
+      });     
     } else {
       setTitle(R.string.menu_edit);
       cancel.setOnClickListener(new View.OnClickListener() {
