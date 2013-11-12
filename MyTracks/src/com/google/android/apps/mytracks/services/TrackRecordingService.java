@@ -75,6 +75,9 @@ import android.util.Log;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import pacer.PaceFactory;
+import pacer.PaceListener;
+
 /**
  * A background service that registers a location listener and records track
  * points. Track points are saved to the {@link MyTracksProvider}.
@@ -595,6 +598,11 @@ public class TrackRecordingService extends Service {
     long now = System.currentTimeMillis();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(now);
     markerTripStatisticsUpdater = new TripStatisticsUpdater(now);
+    
+    // TODO
+    PaceListener paceListener = PaceFactory.getPaceListener();
+    paceListener.setContext(context);
+    trackTripStatisticsUpdater.setPaceListener(paceListener);
 
     // Insert a track
     Track track = new Track();

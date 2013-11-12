@@ -26,6 +26,8 @@ import com.google.common.annotations.VisibleForTesting;
 import android.location.Location;
 import android.util.Log;
 
+import pacer.PaceListener;
+
 /**
  * Updater for {@link TripStatistics}. For updating track trip statistics as new
  * locations are added. Note that some of the locations represent pause/resume
@@ -92,6 +94,8 @@ public class TripStatisticsUpdater {
   // A buffer of the recent speed readings (m/s) for calculating max speed
   private final DoubleBuffer speedBuffer = new DoubleBuffer(SPEED_SMOOTHING_FACTOR);
 
+  //A Listener for PaceListener
+  private PaceListener paceListener;
   /**
    * Creates a new trip statistics updater.
    * 
@@ -107,6 +111,11 @@ public class TripStatisticsUpdater {
     currentSegment.setTotalTime(time - currentSegment.getStartTime());
   }
 
+  public void setPaceListener(PaceListener paceListener){
+    this.paceListener = paceListener;
+  }
+  
+  
   /**
    * Gets the track's trip statistics.
    */
@@ -221,6 +230,7 @@ public class TripStatisticsUpdater {
     } else if (isValidSpeed(time, speed, lastLocationTime, lastLocationSpeed)) {
       Log.v(TAG, "speed is valid, here we go");
       speedBuffer.setNext(speed);
+      paceListener.updateSpeed(speed);
       if (speedBuffer.isFull() && speedBuffer.getAverage() > currentSegment.getMaxSpeed()) {
         currentSegment.setMaxSpeed(speedBuffer.getAverage());
       }
