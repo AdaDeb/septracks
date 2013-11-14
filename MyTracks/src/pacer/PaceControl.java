@@ -15,10 +15,10 @@ public class PaceControl implements PaceListener{
   //factor determining how far you can deviate from the target pace without warning 
   private Double fuzzFactor;  
   
-  public PaceControl(){
+  public PaceControl(int targetPace){
     //TODO dynamic size
     paceBuffer = new DoubleBuffer(10);
-    targetPace = 0.8;
+    this.targetPace = (double) targetPace;
   }
 
 

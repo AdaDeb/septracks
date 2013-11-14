@@ -600,7 +600,9 @@ public class TrackRecordingService extends Service {
     markerTripStatisticsUpdater = new TripStatisticsUpdater(now);
     
     // TODO
-    PaceListener paceListener = PaceFactory.getPaceListener();
+    
+    int targetPace = PreferencesUtils.getInt(this, R.string.target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
+    PaceListener paceListener = PaceFactory.getPaceListener(targetPace);
     trackTripStatisticsUpdater.setPaceListener(paceListener);
 
     // Insert a track
