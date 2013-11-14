@@ -136,6 +136,7 @@ public class TrackRecordingService extends Service {
   private Location lastLocation;
   private boolean currentSegmentHasLocation;
   private boolean isIdle; // true if idle
+  private PaceListener paceListener; 
 
   private ServiceBinder binder = new ServiceBinder(this);
 
@@ -225,6 +226,18 @@ public class TrackRecordingService extends Service {
                 R.string.auto_resume_track_timeout_key,
                 PreferencesUtils.AUTO_RESUME_TRACK_TIMEOUT_DEFAULT);
           }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.target_pace_key))) {
+            paceListener.setTargetPace(PreferencesUtils.getInt(context,
+                R.string.target_pace_key,
+                PreferencesUtils.PACE_KEEPER_PACE_DEFAULT));
+          }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.target_pace_reminder_frequency_key))) {
+            paceListener.setWarningFrequency(PreferencesUtils.getInt(context,
+                R.string.target_pace_reminder_frequency_key,
+                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
+          }
         }
       };
 
@@ -296,6 +309,7 @@ public class TrackRecordingService extends Service {
     activityRecognitionClient.connect();    
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
+    paceListener = PaceFactory.getPaceListener();
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
     sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
@@ -602,7 +616,11 @@ public class TrackRecordingService extends Service {
     // TODO
     
     int targetPace = PreferencesUtils.getInt(this, R.string.target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
-    PaceListener paceListener = PaceFactory.getPaceListener(targetPace);
+    int paceWarningFrequency = PreferencesUtils.getInt(this, 
+        R.string.target_pace_reminder_frequency_key, PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
+    paceListener.setTargetPace(targetPace);
+    paceListener.setWarningFrequency(paceWarningFrequency);
+    
     trackTripStatisticsUpdater.setPaceListener(paceListener);
 
     // Insert a track
@@ -642,6 +660,8 @@ public class TrackRecordingService extends Service {
 
     TripStatistics tripStatistics = track.getTripStatistics();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(tripStatistics.getStartTime());
+    
+    trackTripStatisticsUpdater.setPaceListener(paceListener);
 
     long markerStartTime;
     Waypoint waypoint = myTracksProviderUtils.getLastWaypoint(
@@ -829,12 +849,14 @@ public class TrackRecordingService extends Service {
     voiceExecutor.shutdown();
     splitExecutor.shutdown();
 
+    
     // Update instance variables
     if (sensorManager != null) {
       SensorManagerFactory.releaseSystemSensorManager();
       sensorManager = null;
     }
     lastLocation = null;
+    paceListener = null;
 
     sendTrackBroadcast(trackStopped ? R.string.track_stopped_broadcast_action
         : R.string.track_paused_broadcast_action, trackId);

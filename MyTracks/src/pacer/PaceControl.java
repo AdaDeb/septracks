@@ -2,15 +2,15 @@ package pacer;
 
 import com.google.android.apps.mytracks.stats.DoubleBuffer;
 
-import android.content.Context;
 import android.util.Log;
 
 public class PaceControl implements PaceListener{
   private static final String TAG = PaceControl.class.getSimpleName();
   
   private DoubleBuffer paceBuffer;
-  private Double targetPace;
-  private Double currentPace;
+  private Double targetPace;  // pace is in m/s
+  private Double currentPace; // pace is in m/s
+  private int warningPeriod;  // period is in s (period=60 means one potential warning a minute) 
   
   //factor determining how far you can deviate from the target pace without warning 
   private Double epsilon;  
@@ -19,6 +19,10 @@ public class PaceControl implements PaceListener{
     //TODO dynamic size
     paceBuffer = new DoubleBuffer(10);
     this.targetPace = (double) targetPace;
+  }
+  
+  public PaceControl(){
+    this(10);
   }
 
 
@@ -30,6 +34,7 @@ public class PaceControl implements PaceListener{
   private void handleSpeedUpdate(double speed){ 
     paceBuffer.setNext(speed);
     currentPace = paceBuffer.getAverage();
+
     epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
     Log.d("Pace", "Speed was updated. Speed was: " + speed + ", " +
     		"currentPace: " + currentPace + ", targetPace: " + targetPace);
@@ -49,8 +54,14 @@ public class PaceControl implements PaceListener{
     }
   }
     
-  public void setContext(Context context){
-    // paceContext = context;
+  @Override
+  public void setWarningFrequency(int period) {
+    warningPeriod = period;  
+  }
+
+  @Override
+  public void setTargetPace(int pace) {
+    targetPace = (double)pace; // TODO double input     
   }
   
 }

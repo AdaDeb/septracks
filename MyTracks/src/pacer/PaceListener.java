@@ -1,12 +1,24 @@
 package pacer;
 
-import android.content.Context;
 
 public interface PaceListener {
-
   
-  
+  /**
+   * Inform the listener that a new speed has been recorded
+   * @param speed the speed in m/s
+   */
   void updateSpeed(double speed);
-  void setContext(Context context);
+  
+  /**
+   * Set how often you receive warnings when you go outside your specificed pace range  
+   * @param period seconds between each warning
+   */
+  void setWarningFrequency(int period);
+  
+  /**
+   * Set target pace  
+   * @param pace a pace in m/s 
+   */
+  void setTargetPace(int pace);
   
 }
