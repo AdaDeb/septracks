@@ -13,7 +13,7 @@ public class PaceControl implements PaceListener{
   private Double currentPace;
   
   //factor determining how far you can deviate from the target pace without warning 
-  private Double fuzzFactor;  
+  private Double epsilon;  
   
   public PaceControl(int targetPace){
     //TODO dynamic size
@@ -30,12 +30,12 @@ public class PaceControl implements PaceListener{
   private void handleSpeedUpdate(double speed){ 
     paceBuffer.setNext(speed);
     currentPace = paceBuffer.getAverage();
-    fuzzFactor = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
+    epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
     Log.d("Pace", "Speed was updated. Speed was: " + speed + ", " +
     		"currentPace: " + currentPace + ", targetPace: " + targetPace);
     
     Double paceDiff = currentPace - targetPace; 
-    if (Math.abs(paceDiff) > fuzzFactor){
+    if (Math.abs(paceDiff) > epsilon){
       sendPaceAlert(paceDiff);
     }
   }
