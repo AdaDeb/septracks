@@ -26,7 +26,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.settings.ChartSettingsActivity;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.stats.TripStatisticsUpdater;
 import com.google.android.apps.mytracks.util.LocationUtils;
@@ -107,8 +106,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   };
 
   @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.chart, container, false);
     zoomControls = (ZoomControls) view.findViewById(R.id.chart_zoom_controls);
     zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
@@ -130,8 +128,8 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   public void onStart() {
     super.onStart();
     ViewGroup layout = (ViewGroup) getActivity().findViewById(R.id.chart_view_layout);
-    LayoutParams layoutParams = new LayoutParams(
-        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+        LayoutParams.MATCH_PARENT);
     layout.addView(chartView, layoutParams);
   }
 
@@ -266,8 +264,8 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       }
       reportSpeed = speed;
       chartView.setReportSpeed(reportSpeed);
-      boolean chartShowSpeed = PreferencesUtils.getBoolean(
-          getActivity(), R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
+      boolean chartShowSpeed = PreferencesUtils.getBoolean(getActivity(),
+          R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
       setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed);
       setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed);
       getActivity().runOnUiThread(new Runnable() {
@@ -304,50 +302,42 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   /**
    * Checks the chart settings.
    */
-  
+
   private void checkChartSettings() {
-    boolean needUpdate = false; 
-    
-    //Checks if Distance or Time is selected as unit in 
-    //ListPreference found in ChartSettingsActivity
-    //and updates the track charts X-Axis accordingly
-    
-    if(ChartSettingsActivity.xAxisUnit.equals("Distance")){
+    boolean needUpdate = false;
+
+    // Checks if Distance or Time is selected as unit in
+    // ListPreference found in ChartSettingsActivity
+    // and updates the track charts X-Axis accordingly
+    String chartXxisListPreference = PreferencesUtils.getString(this.getActivity()
+        .getApplicationContext(), R.string.settings_chart_x_axis, "Error");
+
+    if (chartXxisListPreference.equals("Distance")) {
       chartView.setChartByDistance(true);
-            reloadTrackDataHub();
-            needUpdate = true;
+      reloadTrackDataHub();
+      needUpdate = true;
     }
-    if(ChartSettingsActivity.xAxisUnit.equals("Time")){
+    if (chartXxisListPreference.equals("Time")) {
       chartView.setChartByDistance(false);
-            reloadTrackDataHub();
-            needUpdate = true;
+      reloadTrackDataHub();
+      needUpdate = true;
     }
 
-    //Old way of setting preferences
-    
-    //    if (chartByDistance != PreferencesUtils.getBoolean(getActivity(),
-    //        R.string.chart_by_distance_key, PreferencesUtils.CHART_BY_DISTANCE_DEFAULT)) {
-    //      chartByDistance = !chartByDistance;
-    //      chartView.setChartByDistance(chartByDistance);
-    //      reloadTrackDataHub();
-    //      needUpdate = true;
-    //    }
-    
     if (setSeriesEnabled(ChartView.ELEVATION_SERIES, PreferencesUtils.getBoolean(getActivity(),
         R.string.chart_show_elevation_key, PreferencesUtils.CHART_SHOW_ELEVATION_DEFAULT))) {
       needUpdate = true;
     }
 
-    boolean chartShowSpeed = PreferencesUtils.getBoolean(
-        getActivity(), R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
+    boolean chartShowSpeed = PreferencesUtils.getBoolean(getActivity(),
+        R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
     if (setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed)) {
       needUpdate = true;
     }
     if (setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed)) {
       needUpdate = true;
     }
-    if (setSeriesEnabled(ChartView.POWER_SERIES, PreferencesUtils.getBoolean(
-        getActivity(), R.string.chart_show_power_key, PreferencesUtils.CHART_SHOW_POWER_DEFAULT))) {
+    if (setSeriesEnabled(ChartView.POWER_SERIES, PreferencesUtils.getBoolean(getActivity(),
+        R.string.chart_show_power_key, PreferencesUtils.CHART_SHOW_POWER_DEFAULT))) {
       needUpdate = true;
     }
     if (setSeriesEnabled(ChartView.CADENCE_SERIES, PreferencesUtils.getBoolean(getActivity(),

@@ -19,11 +19,11 @@ limitations under the License.
 
     <PreferenceCategory android:title="X-axis" >
         <ListPreference
-            android:defaultValue="1000"
+            android:defaultValue="@string/chart_settings_xaxis_default"
             android:entries="@array/x_axis_units"
             android:entryValues="@array/x_axis_units_value"
-            android:key="x-axis"
-            android:summary="Set which unit is displayed on the X-axis"
+            android:key="@string/settings_chart_x_axis"
+            android:summary="@string/chart_settings_xaxis_summary"
             android:title="@string/settings_chart_x_axis" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_chart_y_axis" >

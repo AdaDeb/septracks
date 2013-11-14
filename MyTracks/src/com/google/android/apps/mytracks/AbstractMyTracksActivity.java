@@ -41,7 +41,7 @@ public abstract class AbstractMyTracksActivity extends FragmentActivity {
     }
 
     setContentView(getLayoutResId());
-
+    
     // Configure action bar must be after setContentView
     if (configureActionBarHomeAsUp()) {
       ApiAdapterFactory.getApiAdapter().configureActionBarHomeAsUp(this);

@@ -3047,4 +3047,12 @@ limitations under the License.
       completion suggestion for a waypoint.">
     waypoint
   </string>
+  <string name="chart_settings_xaxis_default"
+    translation_description="Sets the default value for the chart's x axis setting">
+    Distance
+  </string>
+    <string name="chart_settings_xaxis_summary"
+    translation_description="Sets the description for the xaxis settings">
+    Set which unit is displayed on the X-axis
+  </string>
 </resources>
