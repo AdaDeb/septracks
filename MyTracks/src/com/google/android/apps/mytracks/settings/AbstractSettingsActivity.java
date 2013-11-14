@@ -46,11 +46,11 @@ public class AbstractSettingsActivity extends PreferenceActivity {
     super.onCreate(bundle);
     setVolumeControlStream(TextToSpeech.Engine.DEFAULT_STREAM);
     ApiAdapterFactory.getApiAdapter().configureActionBarHomeAsUp(this);
-
+    
     PreferenceManager preferenceManager = getPreferenceManager();
     preferenceManager.setSharedPreferencesName(Constants.SETTINGS_NAME);
     preferenceManager.setSharedPreferencesMode(Context.MODE_PRIVATE);
-
+       
     // Set up automatic preferences backup
     backupPreferencesListener = new BackupPreferencesListener(this);
 
@@ -88,7 +88,7 @@ public class AbstractSettingsActivity extends PreferenceActivity {
    */
   protected void configureListPreference(ListPreference listPreference, final String[] summary,
       final String[] options, final String[] values, String value,
-      final OnPreferenceChangeListener listener) {
+        final OnPreferenceChangeListener listener) {
     listPreference.setEntryValues(values);
     listPreference.setEntries(options);
     listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

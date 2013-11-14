@@ -265,4 +265,14 @@ limitations under the License.
     <item>@string/waypoint_type_waypoint</item>
   </string-array>
 
+   <string-array name="x_axis_units">
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
+    </string-array>
+    
+    <string-array name="x_axis_units_value">
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
+    </string-array>
+  
 </resources>

@@ -1570,7 +1570,21 @@ limitations under the License.
       either by distance or by time.
 
       Character limit: ~23 (1 line)">
-    X axis
+    X-axis
+  </string>
+  
+    <string name="settings_chart_y_axis"
+    translation_description="In the 'Chart' settings, the option to change the y axis display.
+
+      Character limit: ~23 (1 line)">
+    Y-axis
+  </string>
+  
+        <string name="settings_chart_y_axis_external"
+    translation_description="In the 'Chart' settings, the option to change the y axis display.
+
+      Character limit: ~23 (1 line)">
+    Y-axis (Dependent on external hardware)
   </string>
 
   <!-- Settings Google -->
@@ -3036,5 +3050,13 @@ limitations under the License.
     translation_description="When entering a 'Marker type', in the auto-complete text box, the
       completion suggestion for a waypoint.">
     waypoint
+  </string>
+  <string name="chart_settings_xaxis_default"
+    translation_description="Sets the default value for the chart's x axis setting">
+    Distance
+  </string>
+    <string name="chart_settings_xaxis_summary"
+    translation_description="Sets the description for the xaxis settings">
+    Set which unit is displayed on the X-axis
   </string>
 </resources>
