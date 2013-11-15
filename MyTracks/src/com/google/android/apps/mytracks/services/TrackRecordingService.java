@@ -32,6 +32,7 @@ import com.google.android.apps.mytracks.content.WaypointCreationRequest;
 import com.google.android.apps.mytracks.services.sensors.SensorManager;
 import com.google.android.apps.mytracks.services.sensors.SensorManagerFactory;
 import com.google.android.apps.mytracks.services.tasks.AnnouncementPeriodicTaskFactory;
+import com.google.android.apps.mytracks.services.tasks.PacePeriodicTaskFactory;
 import com.google.android.apps.mytracks.services.tasks.PeriodicTaskExecutor;
 import com.google.android.apps.mytracks.services.tasks.SplitPeriodicTaskFactory;
 import com.google.android.apps.mytracks.stats.TripStatistics;
@@ -117,6 +118,7 @@ public class TrackRecordingService extends Service {
   private ActivityRecognitionClient activityRecognitionClient;
   private PeriodicTaskExecutor voiceExecutor;
   private PeriodicTaskExecutor splitExecutor;
+  private PeriodicTaskExecutor paceExecutor;
   private SharedPreferences sharedPreferences;
   private long recordingTrackId;
   private boolean recordingTrackPaused;
@@ -236,6 +238,7 @@ public class TrackRecordingService extends Service {
             paceController.setWarningPeriod(PreferencesUtils.getInt(context,
                 R.string.target_pace_reminder_frequency_key,
                 PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
+                paceExecutor.setTaskFrequency(paceController.getWarningPeriod());
           }
         }
       };
@@ -305,10 +308,10 @@ public class TrackRecordingService extends Service {
         PendingIntent.FLAG_UPDATE_CURRENT);
     activityRecognitionClient = new ActivityRecognitionClient(
         context, activityRecognitionCallbacks, activityRecognitionFailedListener);
-    activityRecognitionClient.connect();    
+    activityRecognitionClient.connect();  
+    paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
-    //paceController = PaceFactory.getPaceController(); 
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
     sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
@@ -382,6 +385,12 @@ public class TrackRecordingService extends Service {
     // unregister sharedPreferences before shutting down splitExecutor and voiceExecutor
     sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
+    try {
+      paceExecutor.shutdown();
+    } finally {
+      paceExecutor = null;
+    }
+    
     try {
       splitExecutor.shutdown();
     } finally {
@@ -754,6 +763,7 @@ public class TrackRecordingService extends Service {
     // Restore periodic tasks
     voiceExecutor.restore();
     splitExecutor.restore();
+    paceExecutor.restore();
   }
 
   /**
@@ -854,6 +864,7 @@ public class TrackRecordingService extends Service {
     // Shutdown periodic tasks
     voiceExecutor.shutdown();
     splitExecutor.shutdown();
+    paceExecutor.shutdown();
 
     
     // Update instance variables
@@ -1047,6 +1058,7 @@ public class TrackRecordingService extends Service {
     }
     voiceExecutor.update();
     splitExecutor.update();
+    paceExecutor.update();
     sendTrackBroadcast(R.string.track_update_broadcast_action, track.getId());
   }
 
