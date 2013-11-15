@@ -441,6 +441,13 @@ public class TrackRecordingService extends Service {
     }
     return trackTripStatisticsUpdater.getTripStatistics();
   }
+  
+  /**
+   * Gets the pace controller.
+   */
+  public PaceController getPaceController() {
+    return paceController;
+  }
 
   /**
    * Inserts a waypoint.
