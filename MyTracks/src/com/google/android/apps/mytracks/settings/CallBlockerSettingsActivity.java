@@ -16,39 +16,23 @@
 
 package com.google.android.apps.mytracks.settings;
 
-import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
 
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 
 /**
- * An activity for accessing chart settings.
+ * An activity for accessing the backup and reset settings.
  * 
- * @author Jimmy Shih 
+ * @author Jimmy Shih
  */
-public class ChartSettingsActivity extends AbstractSettingsActivity {
+public class CallBlockerSettingsActivity extends AbstractSettingsActivity {
+
 
   @SuppressWarnings("deprecation")
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    addPreferencesFromResource(R.xml.chart_settings);
+    addPreferencesFromResource(R.xml.block_call_settings);
   }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    updateUi();
-  }
-
-  @SuppressWarnings("deprecation")
-  private void updateUi() {
-    CheckBoxPreference speedCheckBoxPreference = (CheckBoxPreference) findPreference(
-        getString(R.string.chart_show_speed_key));
-    boolean reportSpeed = PreferencesUtils.getBoolean(
-        this, R.string.report_speed_key, PreferencesUtils.REPORT_SPEED_DEFAULT);
-    speedCheckBoxPreference.setTitle(reportSpeed ? R.string.stats_speed
-        : R.string.stats_pace);
-  }
+  
 }
