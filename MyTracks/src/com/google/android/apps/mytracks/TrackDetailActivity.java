@@ -177,7 +177,7 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
       AnalyticsUtils.sendPageViews(TrackDetailActivity.this, AnalyticsUtils.ACTION_STOP_RECORDING);
       updateMenuItems(false, true);
       TrackRecordingServiceConnectionUtils.stopRecording(
-          TrackDetailActivity.this, trackRecordingServiceConnection, true);
+          TrackDetailActivity.this, trackRecordingServiceConnection, true, callStateListener.getBlockednumbers().size());
     }
   };
 

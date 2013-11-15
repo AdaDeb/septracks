@@ -9,22 +9,27 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CallStateListener extends PhoneStateListener {
 	
 	private Context context;	
 	private boolean listening;
+	private List<String> blockedNumbers;
 	
 	public CallStateListener(Context context){
 		super();
 		this.context = context;
 		this.listening = true;
+		this.blockedNumbers = new LinkedList<String>();
 		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);	
 		tm.listen(this, PhoneStateListener.LISTEN_CALL_STATE);
 		SharedPreferences sp = context.getApplicationContext().getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
+	}
 
-		int derp = 0 ;
-	    derp++;
+	public List<String> getBlockednumbers(){
+	  return this.blockedNumbers;
 	}
 
 	@Override
@@ -47,6 +52,7 @@ public class CallStateListener extends PhoneStateListener {
     				Method mEndCall = cITelephony.getDeclaredMethod("endCall"); // Fetch the method endCall() from our cITelephony class definition
     				mEndCall.invoke(stub); // Invoke endCall method
     			
+    				blockedNumbers.add(incomingNumber);
     				Toast.makeText(context, "Blocked a call", Toast.LENGTH_LONG).show();
     			}catch(Exception e){}
     			break;

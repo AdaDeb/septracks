@@ -21,12 +21,11 @@ import com.google.android.maps.mytracks.R;
 import android.os.Bundle;
 
 /**
- * An activity for accessing the backup and reset settings.
+ * An activity for changing the settings of the call blocker feature.
  * 
- * @author Jimmy Shih
+ * @author Eric Lundgren
  */
 public class CallBlockerSettingsActivity extends AbstractSettingsActivity {
-
 
   @SuppressWarnings("deprecation")
   @Override
