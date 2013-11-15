@@ -8,13 +8,12 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
 
   public PacePeriodicTask(Context context) {
     super(context);
-    // TODO Auto-generated constructor stub
   }
   
   protected String getAnnouncement(PaceControl pc){
     /**
      * string ret = "";
-     * int state = pc.getState();
+     * double state = pc.getState();
      * switch (state){
      *      case -1:
      *          ret = "Too slow"
