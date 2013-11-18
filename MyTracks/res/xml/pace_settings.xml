@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
     android:title="@string/settings_target_pace_system_title">
-    
-<EditTextPreference
-    android:imeOptions="actionDone"
-    android:inputType="number"
-    android:defaultValue="1"
-    android:key="@string/settings_target_pace_key" 
-    android:title="@string/settings_target_pace_title" />
-    <EditTextPreference
-      android:imeOptions="actionDone"
-      android:inputType="number"
-      android:key="@string/settings_target_pace_reminder_frequency_key"
-      android:persistent="false"
-      android:title="@string/settings_target_pace_reminder_frequency_title" >
-    </EditTextPreference>
+	<CheckBoxPreference
+	    android:defaultValue="false"
+	    android:summaryOn="@string/settings_pace_system_active_summary"
+	    android:summaryOff="@string/settings_pace_system_inactive_summary"
+	    android:title="@string/settings_pace_system_toggle_title"/>
+	<EditTextPreference
+	    android:imeOptions="actionDone"
+	    android:inputType="number"
+	    android:defaultValue="1"
+	    android:key="@string/settings_target_pace_key" 
+	    android:title="@string/settings_target_pace_title" />
+	<EditTextPreference
+	  	android:imeOptions="actionDone"
+	  	android:inputType="number"
+	  	android:key="@string/settings_target_pace_reminder_frequency_key"
+	  	android:persistent="false"
+	  	android:title="@string/settings_target_pace_reminder_frequency_title" >
+	</EditTextPreference>
 </PreferenceScreen>

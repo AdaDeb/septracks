@@ -1716,26 +1716,6 @@ limitations under the License.
       %1$s distance or time. E.g., '5 m' or '1 s'.">
     %1$s between recorded locations
   </string>
-  
-  <string name="settings_target_pace_reminder_frequency_title"
-    translation_description="In the 'Recording' settings, the title to configure the reminder frequency
-
-      Character limit: ~23 (1 line)">
-   FREQUENCY YO
-  </string>
-  <string name="settings_target_pace_title"
-    translation_description="In the 'Recording' settings, the title to configure the target pace
-
-      Character limit: ~23 (1 line)">
-    Target pace (%1$s m/s)
-  </string>
-  <string name="settings_target_pace_system_title"
-    translation_description="In the settings set target pace
-
-      Character limit: ~23 (1 line)">
-   	Pace keeping setting
-  </string>
-  
   <string name="settings_recording_max_recording_distance_summary"
     translation_description="In the 'Recording' settings, the summary for the 'Max distance'
       setting.
@@ -2026,6 +2006,45 @@ limitations under the License.
     Preferred units
   </string>
 
+  <!--  Settings pace system -->
+  <string name="settings_target_pace_system_title"
+    translation_description="In the settings page, the title of the pace system settings activity
+
+      Character limit: ~23 (1 line)">
+   	Pace keeping system
+  </string>
+  <string name="settings_pace_system_active_summary"
+    translation_description="In the 'Pace keeping system' settings, the summary shown below checkbox when the pace system is activated
+
+      Character limit: ~23 (1 line)">
+   Pace system active
+  </string>
+  <string name="settings_pace_system_inactive_summary"
+    translation_description="In the 'Pace keeping system' settings, the summary shown below checkbox when the pace system is deactivated
+
+      Character limit: ~23 (1 line)">
+   Pace system inactive
+  </string>
+    <string name="settings_pace_system_toggle_title"
+    translation_description="In the 'Pace keeping system' settings, the title of the checkbox that turns system on or off
+
+      Character limit: ~23 (1 line)">
+   Use pace system
+  </string>
+  <string name="settings_target_pace_reminder_frequency_title"
+    translation_description="In the 'Pace keeping system' settings, the title to configure the reminder frequency
+
+      Character limit: ~23 (1 line)">
+   FREQUENCY YO
+  </string>
+  <string name="settings_target_pace_title"
+    translation_description="In the 'Pace keeping system' settings, the title to configure the target pace
+
+      Character limit: ~23 (1 line)">
+    Target pace (%1$s m/s)
+  </string>
+
+  
   <!-- Share Track -->
   <string name="share_track_emails_hint"
     translation_description="The hint for the auto complete text box for entering email addresses.">

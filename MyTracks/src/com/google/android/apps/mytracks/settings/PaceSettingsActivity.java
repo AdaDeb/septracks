@@ -5,6 +5,7 @@ import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.android.maps.mytracks.R;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -13,6 +14,7 @@ import android.util.Log;
 public class PaceSettingsActivity extends AbstractSettingsActivity {
   private static final String TAG = PaceSettingsActivity.class.getSimpleName();
   private EditTextPreference targetPacePreference;
+  private CheckBoxPreference usePaceSystemPreference; 
   
   
   @SuppressWarnings("deprecation")
@@ -22,7 +24,11 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
 
     targetPacePreference = (EditTextPreference) findPreference(
         getString(R.string.settings_target_pace_key));
+    usePaceSystemPreference = (CheckBoxPreference) findPreference(
+        getString(R.string.settings_use_pace_system_key));
   
+    configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
+        PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
     
     
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,
@@ -30,9 +36,27 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
 
     updateTargetPaceSummary(targetPacePreference, R.string.settings_target_pace_key,
         PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
+    
+    
   }
 
 
+  private void configUsePaceSystem(final Preference preference, final int key, final boolean defaultValue){
+    preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
+          
+          @Override
+          public boolean onPreferenceChange(Preference pref, Object newValue) {
+            boolean val = newValue instanceof Boolean ? (Boolean) newValue : defaultValue;
+            storeUsePaceSystem(key, val);
+            return false;
+          }
+                
+        });
+  }
+  
+  private void storeUsePaceSystem(int key, boolean val) {
+   PreferencesUtils.setBoolean(this, key, val);
+  }
 
   private void updateTargetPaceSummary(Preference preference,
       int key, String defaultValue) {
@@ -47,7 +71,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
   private int getTargetPaceValue(int key,String defaultValue) {
     int value = Integer.parseInt(PreferencesUtils.getString(this, key, defaultValue));
     if (!PreferencesUtils.isMetricUnits(this)) {
-      value = (int) (value * UnitConversions.KM_TO_MI);
+      value = (int) (value * UnitConversions.KM_TO_MI); // TODO exccise ? we're not dealing with 
     }
     return value;
   }
