@@ -37,7 +37,7 @@ public class SettingsActivity extends AbstractSettingsActivity {
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     addPreferencesFromResource(R.xml.settings);
-
+    
     configPreference(R.string.settings_google_key, GoogleSettingsActivity.class);
     configPreference(R.string.settings_map_key, MapSettingsActivity.class);
     configPreference(R.string.settings_chart_key, ChartSettingsActivity.class);
@@ -46,6 +46,8 @@ public class SettingsActivity extends AbstractSettingsActivity {
     configPreference(R.string.settings_sharing_key, SharingSettingsActivity.class);
     configPreference(R.string.settings_sensor_key, SensorSettingsActivity.class);
     configPreference(R.string.settings_backup_reset_key, BackupResetSettingsActivity.class);
+    configPreference(R.string.settings_block_call_key, CallBlockerSettingsActivity.class);
+//    configPreference(R.string.settings_backup_reset_key, CallBlockerSettingsActivity.class);
   }
 
   /**
@@ -56,6 +58,7 @@ public class SettingsActivity extends AbstractSettingsActivity {
    */
   @SuppressWarnings("deprecation")
   private void configPreference(int key, final Class<?> cl) {
+    String newKey = getString(key); 
     Preference preference = findPreference(getString(key));
     preference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
         @Override
@@ -63,7 +66,7 @@ public class SettingsActivity extends AbstractSettingsActivity {
         Intent intent = IntentUtils.newIntent(SettingsActivity.this, cl);
         startActivity(intent);
         return true;
-      }
+      } 
     });
   }
 }

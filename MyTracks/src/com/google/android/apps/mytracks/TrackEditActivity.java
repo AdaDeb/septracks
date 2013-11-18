@@ -25,10 +25,14 @@ import com.google.android.apps.mytracks.util.TrackIconUtils;
 import com.google.android.apps.mytracks.util.TrackNameUtils;
 import com.google.android.maps.mytracks.R;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -52,6 +56,7 @@ public class TrackEditActivity extends AbstractMyTracksActivity
 
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_NEW_TRACK = "new_track";
+  public static final String NUM_BLOCKED_CALLS = "num_blocked_calls";
 
   private static final String TAG = TrackEditActivity.class.getSimpleName();
   private static final String ICON_VALUE_KEY = "icon_value_key";
@@ -70,6 +75,32 @@ public class TrackEditActivity extends AbstractMyTracksActivity
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
 
+//  Checking if a call was blocked during the previous recording and alerting the user if 
+//  that was the case
+    int numBlockedCalls = getIntent().getIntExtra(NUM_BLOCKED_CALLS, -1);
+    if(numBlockedCalls > 0){
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(R.string.call_blocked_popup_title);
+      builder.setMessage(numBlockedCalls + " " + getString(R.string.call_blocked_popup_message));
+      builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+              Intent showCallLog = new Intent();
+              showCallLog.setAction(Intent.ACTION_VIEW);
+              showCallLog.setType(CallLog.Calls.CONTENT_TYPE);
+              TrackEditActivity.this.startActivity(showCallLog);
+          }
+      });
+      builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+  
+        }
+      });
+      builder.show();
+    }
+
+      
     trackId = getIntent().getLongExtra(EXTRA_TRACK_ID, -1L);
     if (trackId == -1L) {
       Log.e(TAG, "invalid trackId");

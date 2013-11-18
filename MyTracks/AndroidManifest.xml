@@ -134,6 +134,8 @@ limitations under the License.
     android:normalScreens="true"
     android:smallScreens="true"
     android:xlargeScreens="true" />
+  <uses-permission android:name="android.permission.CALL_PHONE"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <application
     android:allowBackup="true"
     android:backupAgent="com.google.android.apps.mytracks.io.backup.MyTracksBackupAgent"
@@ -217,6 +219,7 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.io.sendtogoogle.UploadResultActivity" />
     <activity android:name="com.google.android.apps.mytracks.io.spreadsheets.SendSpreadsheetsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.BackupResetSettingsActivity" />
+    <activity android:name="com.google.android.apps.mytracks.settings.CallBlockerSettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.ChartSettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.GoogleSettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.MapSettingsActivity" />
