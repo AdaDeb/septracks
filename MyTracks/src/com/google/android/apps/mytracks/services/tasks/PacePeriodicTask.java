@@ -10,7 +10,9 @@ import pacer.PaceController;
 
 /**
  * SEP-6
- * 
+ * A task for announcing the status of the pace via voice messages.
+ * It extends the AnnouncementPeriodicTask due to the fact that it also
+ * handles voice messages (Text-To-Speech).
  * 
  * @author Björn Lexell, Johan Grundén
  *

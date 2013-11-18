@@ -314,7 +314,12 @@ public class TrackRecordingService extends Service {
     paceController = PaceFactory.getPaceController();
     
     paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
-    paceExecutor.setTaskFrequency(1);
+    // SEP-6 Frequency is changed for pace in TimerTaskExecutor.java
+    // The setTaskFrequency, takes an integer that is in minutes.
+    // We want the pace to have a faster interval than one minute.
+    // Therefore we set a dummy value of 1 and then change it to seconds in TimerTaskExecutor.java
+    // An alternative is to change the interface, but then it is needed to change all the other periodic tasks.
+    paceExecutor.setTaskFrequency(1); 
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);

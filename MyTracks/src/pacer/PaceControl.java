@@ -92,6 +92,7 @@ public class PaceControl implements PaceListener, PaceController{
         ret = SLOW_DOWN;
     }
     
+    // Update the state.
     previousState = current;
     
     return ret;
@@ -102,6 +103,7 @@ public class PaceControl implements PaceListener, PaceController{
     return previousState;
   }
   
+  // Returns a string that is used for announcing the state of the current pace.
   @Override
   public String getStateVoiceMessage(){
     PaceState state = getState();
