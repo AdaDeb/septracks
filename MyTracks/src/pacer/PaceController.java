@@ -11,7 +11,7 @@ public interface PaceController {
    * Value == 0 means user should retain pace 
    * @return double representing how user should change pace
    */
-  public double getStatus();
+  public String getStateVoiceMessage();
   
   public double getTargetPace();
   
@@ -22,6 +22,8 @@ public interface PaceController {
   public void setWarningPeriod(int period);
 
   public void setTargetPace(int pace);
+  
+  public String getPaceMessage();
   
   /**
    * Returns this PaceController as a PaceListener

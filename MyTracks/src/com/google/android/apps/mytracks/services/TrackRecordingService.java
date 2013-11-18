@@ -77,6 +77,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pacer.PaceController;
+import pacer.PaceFactory;
 
 /**
  * A background service that registers a location listener and records track
@@ -238,10 +239,10 @@ public class TrackRecordingService extends Service {
             paceController.setWarningPeriod(PreferencesUtils.getInt(context,
                 R.string.target_pace_reminder_frequency_key,
                 PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
-                paceExecutor.setTaskFrequency(paceController.getWarningPeriod());
           }
         }
       };
+
 
   private LocationListener locationListener = new LocationListener() {
       @Override
@@ -309,7 +310,11 @@ public class TrackRecordingService extends Service {
     activityRecognitionClient = new ActivityRecognitionClient(
         context, activityRecognitionCallbacks, activityRecognitionFailedListener);
     activityRecognitionClient.connect();  
+    
+    paceController = PaceFactory.getPaceController();
+    
     paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
+    paceExecutor.setTaskFrequency(1);
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);

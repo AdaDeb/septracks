@@ -8,8 +8,14 @@ import android.util.Log;
 
 import pacer.PaceController;
 
+/**
+ * SEP-6
+ * 
+ * 
+ * @author Björn Lexell, Johan Grundén
+ *
+ */
 public class PacePeriodicTask extends AnnouncementPeriodicTask {
-
 
   private static final String TAG = PacePeriodicTask.class.getSimpleName();
   
@@ -18,18 +24,9 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
   }
   
   protected String getAnnouncement(PaceController pc){
-   
-     String ret = "";
-     double state = pc.getStatus();
-     
-     if(state < 0)
-       ret = "Too slow";
-     else if(state == 0)
-       ret = "On target pace";
-     else if(state > 0) 
-       ret = "Too fast";           
-    return ret;   
-  }
+    //return pc.getPaceMessage(); // Only speak if pace-state changes
+    return pc.getStateVoiceMessage(); // Speak state every 5th second
+  }  
   
   @Override
   public void run(TrackRecordingService trackRecordingService) {

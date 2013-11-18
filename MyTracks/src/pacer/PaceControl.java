@@ -21,8 +21,21 @@ public class PaceControl implements PaceListener, PaceController{
   private int warningPeriod;  // period is in s (period=60 means one potential warning a minute)
   private double paceDiff; // difference between target pace and current pace in m/s
   
+  private enum PaceState {
+    ON_PACE, UNDER_PACE, OVER_PACE
+  };
+  
+  private PaceState previousState; // Keeps track on the status of the pace
+  
+  // String constants for voice messages
+  public static final String SPEED_UP = "Speed up.";
+  public static final String SLOW_DOWN = "Slow down.";
+  public static final String ON_PACE = "Reached target pace.";
+  
+  
   //factor determining how far you can deviate from the target pace without warning 
-  private Double epsilon;  
+  //Epsilon is max value to prevent pacer to send messages when standing still or accruing GPS
+  private Double epsilon = Double.MAX_VALUE;  
   
   public PaceControl(int targetPace){
     //TODO dynamic size of buffer - take GPS settings into account! 
@@ -48,13 +61,58 @@ public class PaceControl implements PaceListener, PaceController{
     		"currentPace: " + currentPace + ", targetPace: " + targetPace);
     
     paceDiff = currentPace - targetPace; 
+       
+  }
+  
+  // Returns the updated state
+  private PaceState getUpdatedState()
+  {
+    PaceState newState;
+    if(Math.abs(paceDiff) < epsilon)
+      newState = PaceState.ON_PACE;
+    else if(paceDiff > 0)
+      newState = PaceState.OVER_PACE;
+    else
+      newState = PaceState.UNDER_PACE;
     
+    return newState;
+  }
+
+  // Returns a message of the pace used for voice output.
+  public String getPaceMessage()
+  {
+    String ret = "";
+    PaceState current = getUpdatedState();
+    if(current != previousState){
+      if(current == PaceState.ON_PACE)
+        ret = ON_PACE;
+      else if(current == PaceState.OVER_PACE)
+        ret = SPEED_UP;
+      else
+        ret = SLOW_DOWN;
+    }
+    
+    previousState = current;
+    
+    return ret;
+  }
+  
+  private PaceState getState(){
+    sendPaceAlert(paceDiff); // DEBUG remove
+    return previousState;
   }
   
   @Override
-  public double getStatus(){
-    sendPaceAlert(paceDiff); // DEBUG remove
-    return Math.abs(paceDiff) > epsilon ? paceDiff : 0;
+  public String getStateVoiceMessage(){
+    PaceState state = getState();
+    previousState = getUpdatedState();
+    
+    if(state == PaceState.OVER_PACE)
+      return SLOW_DOWN;
+    else if (state == PaceState.UNDER_PACE)
+      return SPEED_UP;
+    else 
+      return ON_PACE;    
   }
   
   private void sendPaceAlert(Double paceDiff){
