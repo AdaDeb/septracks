@@ -1729,6 +1729,13 @@ limitations under the License.
       Character limit: ~23 (1 line)">
     Target pace (%1$s m/s)
   </string>
+  <string name="settings_target_pace_system_title"
+    translation_description="In the settings set target pace
+
+      Character limit: ~23 (1 line)">
+   	Pace keeping setting
+  </string>
+  
   <string name="settings_recording_max_recording_distance_summary"
     translation_description="In the 'Recording' settings, the summary for the 'Max distance'
       setting.

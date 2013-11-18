@@ -91,5 +91,6 @@ limitations under the License.
   <string name="settings_sharing_key">settingsSharing</string>
   <string name="settings_stats_key">settingsStats</string>
   <string name="settings_target_pace_key">settingsTargetPaceKey</string>
-  <string name="settings_target_pace_reminder_frequency_key">targetPaceReminderFrequencyKey</string>
+  <string name="settings_target_pace_reminder_frequency_key">settingsTargetPaceReminderFrequencyKey</string>
+  <string name="settings_target_pace_system_key">settingsTargetPaceSystemKey</string>
 </resources>

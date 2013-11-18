@@ -40,9 +40,7 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
 
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
 
-    configListPreference(R.string.settings_target_pace_key,
-        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT,
-        R.array.pace_keeper_pace_values, metricUnits);
+
     
     configFrequencyPreference(R.string.voice_frequency_key,
         PreferencesUtils.VOICE_FREQUENCY_DEFAULT, R.array.frequency_values, metricUnits);
@@ -132,9 +130,6 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
         break;
       case R.string.auto_resume_track_timeout_key:
         setAutoResumeTrackTimeoutSummaryAndOptions(summary, options, values);
-        break;
-      case R.string.settings_target_pace_key:
-        setTargetPaceSummaryAndOptions(summary, options, values);
         break;
       default:
         return;

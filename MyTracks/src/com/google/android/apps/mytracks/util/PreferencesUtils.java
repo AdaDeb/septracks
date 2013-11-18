@@ -122,7 +122,7 @@ public class PreferencesUtils {
   public static final int VOICE_FREQUENCY_DEFAULT = 0;
 
   // Pace keeper
-  public static final int PACE_KEEPER_PACE_DEFAULT = 3;
+  public static final String PACE_KEEPER_PACE_DEFAULT = "3";
   public static final int PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT = 60; 
   
   private PreferencesUtils() {}

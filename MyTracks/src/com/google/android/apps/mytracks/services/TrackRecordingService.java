@@ -227,9 +227,9 @@ public class TrackRecordingService extends Service {
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_target_pace_key))) {
-            paceController.setTargetPace(PreferencesUtils.getInt(context,
+            paceController.setTargetPace(Integer.parseInt(PreferencesUtils.getString(context,
                 R.string.settings_target_pace_key,
-                PreferencesUtils.PACE_KEEPER_PACE_DEFAULT));
+                PreferencesUtils.PACE_KEEPER_PACE_DEFAULT)));
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_target_pace_reminder_frequency_key))) {
@@ -614,7 +614,7 @@ public class TrackRecordingService extends Service {
     
     // TODO
     
-    int targetPace = PreferencesUtils.getInt(this, R.string.settings_target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
+    int targetPace = Integer.parseInt(PreferencesUtils.getString(this, R.string.settings_target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT));
     int paceWarningPeriod = PreferencesUtils.getInt(this, 
         R.string.settings_target_pace_reminder_frequency_key, PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
     paceController.setTargetPace(targetPace);

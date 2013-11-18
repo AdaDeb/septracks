@@ -26,16 +26,16 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
     
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,
-        PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
+        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
 
     updateTargetPaceSummary(targetPacePreference, R.string.settings_target_pace_key,
-        PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
+        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
   }
 
 
 
   private void updateTargetPaceSummary(Preference preference,
-      int key, int defaultValue) {
+      int key, String defaultValue) {
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
     int displayValue = getTargetPaceValue(key, defaultValue);
     preference.setSummary(getString(
@@ -44,8 +44,8 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
   }
   
-  private int getTargetPaceValue(int key, int defaultValue) {
-    int value = PreferencesUtils.getInt(this, key, defaultValue);
+  private int getTargetPaceValue(int key,String defaultValue) {
+    int value = Integer.parseInt(PreferencesUtils.getString(this, key, defaultValue));
     if (!PreferencesUtils.isMetricUnits(this)) {
       value = (int) (value * UnitConversions.KM_TO_MI);
     }
@@ -54,7 +54,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
 
 
   private void configTargetPacePreference(EditTextPreference preference,
-      final int key, final int defaultValue) {
+      final int key, final String defaultValue) {
     preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
       
       @Override
@@ -71,7 +71,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
     
   }
-  private void storeTargetPace(int key, int defaultValue, String val) {
+  private void storeTargetPace(int key, String defaultValue, String val) {
       int value;
       try {
         value = Integer.parseInt(val);
@@ -80,10 +80,10 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
         }
       } catch (NumberFormatException e) {
         Log.e(TAG, "invalid value " + val);
-        value = defaultValue;
+        value = Integer.parseInt(defaultValue);
       }
 
-      PreferencesUtils.setInt(this, key, value);
+      PreferencesUtils.setString(this, key,""+value);
     
   }
 
