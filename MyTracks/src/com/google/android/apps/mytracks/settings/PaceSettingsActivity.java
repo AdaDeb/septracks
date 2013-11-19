@@ -4,6 +4,7 @@ import com.google.android.apps.mytracks.IntegerListPreference;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.android.maps.mytracks.R;
+import com.google.common.annotations.VisibleForTesting;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -56,25 +57,6 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);    
   }
   
-  private void updateTargetPaceSummary(Preference preference,
-      int key, String defaultValue) {
-    boolean metricUnits = PreferencesUtils.isMetricUnits(this);
-    double displayValue = getTargetPaceValue(key, defaultValue);
-    preference.setSummary(getString(
-        metricUnits ? R.string.value_double_minutes_kilometer : R.string.value_double_minutes_miles,
-        displayValue));
-    
-  }
-  
-  private double getTargetPaceValue(int key,String defaultValue) {
-    Double value = Double.parseDouble((PreferencesUtils.getString(this, key, defaultValue)));
-    if (!PreferencesUtils.isMetricUnits(this)) {
-      value = (value * UnitConversions.KM_TO_MI); // TODO exccise ? we're not dealing with 
-    }
-    return value;
-  }
-
-
   private void configTargetPacePreference(EditTextPreference preference,
       final int key, final String defaultValue) {
     preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
@@ -88,20 +70,49 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
       }
     });
   }
+  
+  private void updateTargetPaceSummary(Preference preference,
+      int key, String defaultValue) {
+    boolean metricUnits = PreferencesUtils.isMetricUnits(this);
+    double displayValue = getTargetPaceForSummary(key, defaultValue);
+    preference.setSummary(getString(
+        metricUnits ? R.string.value_double_minutes_kilometer : R.string.value_double_minutes_miles,
+        displayValue));
+    
+  }
+  
+  @VisibleForTesting
+  private double getTargetPaceForSummary(int key,String defaultValue) {
+    Double value = Double.parseDouble((PreferencesUtils.getString(this, key, defaultValue)));
+    // Convert back from m/s to minutes per km/mile
+    value = 1/(value * 3.6 / 60);
+    if (!PreferencesUtils.isMetricUnits(this)) {
+      value *= UnitConversions.KM_TO_MI;  
+    }
+    return value;
+  }
+
+  @VisibleForTesting
   private void storeTargetPace(int key, String defaultValue, String val) {
       double value;
       try {
         value = Double.parseDouble(val);
+        
+        // Input is in "minutes per kilometer (or mile)"
+        // we derive meter per second as follows:
+        // 1/speed * 60[to kmh/mph] / 3.6 [to m/s]
+        value = (60/value)/3.6;  
+        
         if (!PreferencesUtils.isMetricUnits(this)) {
-          value = (double) (value * UnitConversions.MI_TO_KM);
+          value /= UnitConversions.MI_TO_KM;
         }
+        
       } catch (NumberFormatException e) {
-        Log.e(TAG, "invalid value " + val);
+        Log.w(TAG, "Could not parse target pace of val " + val + ", setting poor value");
         value = Double.parseDouble(defaultValue);
       }
 
       PreferencesUtils.setString(this, key,""+value);
-    
   }
-
+  
 }
