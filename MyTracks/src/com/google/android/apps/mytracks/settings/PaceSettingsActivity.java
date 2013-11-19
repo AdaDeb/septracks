@@ -27,8 +27,8 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     usePaceSystemPreference = (CheckBoxPreference) findPreference(
         getString(R.string.settings_use_pace_system_key));
   
-    configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
-        PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
+   // configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
+    //    PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
     
     
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,
@@ -40,7 +40,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
   }
 
-
+/*
   private void configUsePaceSystem(final Preference preference, final int key, final boolean defaultValue){
     preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
           
@@ -57,11 +57,11 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
   private void storeUsePaceSystem(int key, boolean val) {
    PreferencesUtils.setBoolean(this, key, val);
   }
-
+*/
   private void updateTargetPaceSummary(Preference preference,
       int key, String defaultValue) {
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
-    int displayValue = getTargetPaceValue(key, defaultValue);
+    double displayValue = getTargetPaceValue(key, defaultValue);
     preference.setSummary(getString(
         metricUnits ? R.string.value_integer_kilometer_hour : R.string.value_integer_mile_hour,
         displayValue));
@@ -96,15 +96,15 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
   }
   private void storeTargetPace(int key, String defaultValue, String val) {
-      int value;
+      double value;
       try {
         value = Integer.parseInt(val);
         if (!PreferencesUtils.isMetricUnits(this)) {
-          value = (int) (value * UnitConversions.MI_TO_KM);
+          value = (double) (value * UnitConversions.MI_TO_KM);
         }
       } catch (NumberFormatException e) {
         Log.e(TAG, "invalid value " + val);
-        value = Integer.parseInt(defaultValue);
+        value = Double.parseDouble(defaultValue);
       }
 
       PreferencesUtils.setString(this, key,""+value);

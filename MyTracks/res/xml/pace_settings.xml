@@ -4,13 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android" 
     android:title="@string/settings_target_pace_system_title">
 	<CheckBoxPreference
+	    android:key="@string/settings_use_pace_system_key"
 	    android:defaultValue="false"
 	    android:summaryOn="@string/settings_pace_system_active_summary"
 	    android:summaryOff="@string/settings_pace_system_inactive_summary"
 	    android:title="@string/settings_pace_system_toggle_title"/>
 	<EditTextPreference
 	    android:imeOptions="actionDone"
-	    android:inputType="number"
+	    android:inputType="numberDecimal" 
 	    android:defaultValue="1"
 	    android:key="@string/settings_target_pace_key" 
 	    android:title="@string/settings_target_pace_title" />
