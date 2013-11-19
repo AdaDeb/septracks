@@ -69,11 +69,6 @@ public class SessionLoginSampleActivity extends Activity {
                 startActivity(intent);
             }
         });
-        
-        
-        
-        
-        
     }
 
     @Override
