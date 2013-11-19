@@ -1,7 +1,5 @@
 package pacer;
 
-import com.google.android.apps.mytracks.stats.DoubleBuffer;
-
 import android.util.Log;
 
 /**
@@ -15,16 +13,16 @@ import android.util.Log;
 public class PaceControl implements PaceListener, PaceController{
   private static final String TAG = PaceControl.class.getSimpleName();
   
-  private DoubleBuffer paceBuffer;
   private Double targetPace;  // pace is in m/s
-  private Double currentPace; // pace is in m/s
+  private Double currentPace = 0D; // pace is in m/s
   private int warningPeriod;  // period is in s (period=60 means one potential warning a minute)
   private double paceDiff; // difference between target pace and current pace in m/s
   
   private enum PaceState {
     ON_PACE("Reached target pace"), 
     UNDER_PACE("Speed up"), 
-    OVER_PACE("Slow down");
+    OVER_PACE("Slow down"),
+    STANDING_STILL("Standing still"); 
     
     private final String message; 
     
@@ -37,15 +35,14 @@ public class PaceControl implements PaceListener, PaceController{
     }
   };
   
-  private PaceState previousState = PaceState.ON_PACE; // Keeps track on the status of the pace
+  private PaceState previousState = PaceState.STANDING_STILL; // Keeps track on the status of the pace
   
   //factor determining how far you can deviate from the target pace without warning 
   //Epsilon is max value to prevent pacer to send messages when standing still or accruing GPS
   private Double epsilon = Double.MAX_VALUE;  
   
   public PaceControl(int targetPace){
-    //TODO dynamic size of buffer - take GPS settings into account! 
-    paceBuffer = new DoubleBuffer(10);
+    //TODO dynamic size of buffer - take GPS settings into account!
     this.targetPace = (double) targetPace;
   }
   
@@ -59,13 +56,9 @@ public class PaceControl implements PaceListener, PaceController{
   }
   
   private void handleSpeedUpdate(double speed){ 
-    //paceBuffer.setNext(speed);
-    //currentPace = paceBuffer.getAverage();
+    
     currentPace = speed; 
     epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
-    /*Log.i("Pace", "Speed was updated. Speed was: " + speed + ", " +
-    		"currentPace: " + currentPace + ", targetPace: " + targetPace);*/
-    
     paceDiff = currentPace - targetPace; 
        
   }
@@ -73,14 +66,17 @@ public class PaceControl implements PaceListener, PaceController{
   // Returns the updated state
   private PaceState getUpdatedState()
   {
+    
     PaceState newState;
-    if(Math.abs(paceDiff) < epsilon)
+    if(currentPace == 0)
+      newState = PaceState.STANDING_STILL;
+    else if(Math.abs(paceDiff) < epsilon)
       newState = PaceState.ON_PACE;
     else if(paceDiff > 0)
       newState = PaceState.OVER_PACE;
     else
       newState = PaceState.UNDER_PACE;
-    
+    Log.i("voice", "Current state: " + newState.message()); 
     return newState;
   }
 

@@ -173,11 +173,13 @@ public class TrackRecordingService extends Service {
             voiceExecutor.setMetricUnits(metricUnits);
             splitExecutor.setMetricUnits(metricUnits);
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.voice_frequency_key))) {
             voiceExecutor.setTaskFrequency(60000*PreferencesUtils.getInt(
                 context, R.string.voice_frequency_key, PreferencesUtils.VOICE_FREQUENCY_DEFAULT));
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT      
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.split_frequency_key))) {
             splitExecutor.setTaskFrequency(60000*PreferencesUtils.getInt(
