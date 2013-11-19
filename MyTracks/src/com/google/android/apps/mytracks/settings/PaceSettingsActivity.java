@@ -1,11 +1,11 @@
 package com.google.android.apps.mytracks.settings;
 
+import com.google.android.apps.mytracks.IntegerListPreference;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.android.maps.mytracks.R;
 
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -14,7 +14,7 @@ import android.util.Log;
 public class PaceSettingsActivity extends AbstractSettingsActivity {
   private static final String TAG = PaceSettingsActivity.class.getSimpleName();
   private EditTextPreference targetPacePreference;
-  private CheckBoxPreference usePaceSystemPreference; 
+  private IntegerListPreference paceWarningFrequencyPreference; 
   
   
   @SuppressWarnings("deprecation")
@@ -24,12 +24,8 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
 
     targetPacePreference = (EditTextPreference) findPreference(
         getString(R.string.settings_target_pace_key));
-    usePaceSystemPreference = (CheckBoxPreference) findPreference(
-        getString(R.string.settings_use_pace_system_key));
-  
-    configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
-        PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
-    
+    paceWarningFrequencyPreference = (IntegerListPreference) findPreference(
+        getString(R.string.settings_target_pace_reminder_frequency_key));
     
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,
         PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
@@ -37,25 +33,25 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     updateTargetPaceSummary(targetPacePreference, R.string.settings_target_pace_key,
         PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
     
+    configPaceWarningFrequencyPreference(paceWarningFrequencyPreference, 
+        R.string.settings_target_pace_reminder_frequency_key,
+        PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
     
   }
 
-
-  private void configUsePaceSystem(final Preference preference, final int key, final boolean defaultValue){
-    preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
-          
-          @Override
-          public boolean onPreferenceChange(Preference pref, Object newValue) {
-            boolean val = newValue instanceof Boolean ? (Boolean) newValue : defaultValue;
-            storeUsePaceSystem(key, val);
-            return false;
-          }
-                
-        });
-  }
-  
-  private void storeUsePaceSystem(int key, boolean val) {
-   PreferencesUtils.setBoolean(this, key, val);
+  private void configPaceWarningFrequencyPreference(
+      IntegerListPreference preference, int key, int defaultValue) {
+    int value = PreferencesUtils.getInt(this, key, defaultValue);
+    String[] values = getResources().getStringArray(R.array.pace_keeper_frequency_values);
+    String[] options = new String[values.length];
+    String[] summary = new String[values.length];
+    for (int i = 0; i < values.length; i++) {
+      int val = Integer.parseInt(values[i]);
+      options[i] = getString(R.string.value_integer_second, val);
+      summary[i] = getString(R.string.value_integer_second, val);
+    }
+    
+    configureListPreference(preference, summary, options, values, String.valueOf(value), null);    
   }
 
   private void updateTargetPaceSummary(Preference preference,
@@ -88,12 +84,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
         updateTargetPaceSummary(pref, key, defaultValue);
         return false;
       }
-
-      
-      
     });
-    
-    
   }
   private void storeTargetPace(int key, String defaultValue, String val) {
       int value;

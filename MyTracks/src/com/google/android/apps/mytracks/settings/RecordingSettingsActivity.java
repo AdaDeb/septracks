@@ -136,15 +136,6 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
     }
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);
   }
-
-  private void setTargetPaceSummaryAndOptions(String[] summary, String[] options, String[] values){
-    for (int i = 0; i < values.length; i++) {
-      int value = Integer.parseInt(values[i]);
-      options[i] = value + " m/s";  // TODO externalize string (if this method is kept)   
-      summary[i] = value + " m/s";
-    }
-  } 
-  
   
   /**
    * Sets the min recording interval summary and options.

@@ -14,11 +14,11 @@
 	    android:defaultValue="1"
 	    android:key="@string/settings_target_pace_key" 
 	    android:title="@string/settings_target_pace_title" />
-	<EditTextPreference
+	<com.google.android.apps.mytracks.IntegerListPreference
 	  	android:imeOptions="actionDone"
 	  	android:inputType="number"
 	  	android:key="@string/settings_target_pace_reminder_frequency_key"
 	  	android:persistent="false"
 	  	android:title="@string/settings_target_pace_reminder_frequency_title" >
-	</EditTextPreference>
+	</com.google.android.apps.mytracks.IntegerListPreference>
 </PreferenceScreen>

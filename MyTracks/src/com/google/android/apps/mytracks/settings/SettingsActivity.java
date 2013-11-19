@@ -46,7 +46,7 @@ public class SettingsActivity extends AbstractSettingsActivity {
     configPreference(R.string.settings_sharing_key, SharingSettingsActivity.class);
     configPreference(R.string.settings_sensor_key, SensorSettingsActivity.class);
     configPreference(R.string.settings_backup_reset_key, BackupResetSettingsActivity.class);
-    configPreference (R.string.settings_target_pace_system_key, PaceSettingsActivity.class);
+    configPreference(R.string.settings_target_pace_system_key, PaceSettingsActivity.class);
   }
 
   /**

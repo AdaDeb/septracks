@@ -233,10 +233,20 @@ public class TrackRecordingService extends Service {
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_target_pace_reminder_frequency_key))) {
-            paceController.setWarningPeriod(PreferencesUtils.getInt(context,
-                R.string.settings_target_pace_reminder_frequency_key,
-                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
+//            paceExectuor.setTaskFrequency(PreferencesUtils.getInt(context,
+//                R.string.settings_target_pace_reminder_frequency_key,
+//                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT) * 1000);
           }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_use_pace_system_key))){
+            boolean usePace = PreferencesUtils.getBoolean(context, 
+                R.string.settings_use_pace_system_key, 
+                PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
+            int paceFrequency = usePace ? 
+                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT * 1000 : 0; 
+            //paceExecutor.setTaskFrequency(paceFrequency);
+          }
+            
         }
       };
 
