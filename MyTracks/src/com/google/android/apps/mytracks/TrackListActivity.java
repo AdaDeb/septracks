@@ -391,6 +391,11 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
 
     getSupportLoaderManager().initLoader(0, null, loaderCallbacks);
     showStartupDialogs();
+    
+//    //TODO: tabort
+//    Intent intent2 = new Intent(this, FacebookLogin.class);
+//    startActivity(intent2);
+    
   }
 
   @Override
