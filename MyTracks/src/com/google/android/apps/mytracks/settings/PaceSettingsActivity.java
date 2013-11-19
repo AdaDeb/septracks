@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
 
 public class PaceSettingsActivity extends AbstractSettingsActivity {
@@ -69,6 +70,18 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
         return false;
       }
     });
+    preference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+      
+      @Override
+      public boolean onPreferenceClick(Preference preference) {
+        String val = PreferencesUtils.getString(
+            PaceSettingsActivity.this, R.string.settings_target_pace_key, 
+            PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
+        double formattedSpeed = meterPerSecondToMinutesPerDistance(Double.parseDouble(val)); 
+        ((EditTextPreference)preference).getEditText().setText(""+formattedSpeed);
+        return true;
+      }
+    });
   }
   
   private void updateTargetPaceSummary(Preference preference,
@@ -84,12 +97,9 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
   @VisibleForTesting
   private double getTargetPaceForSummary(int key,String defaultValue) {
     Double value = Double.parseDouble((PreferencesUtils.getString(this, key, defaultValue)));
+    Log.w(TAG, "PreferenceUtils value was: " + value);
     // Convert back from m/s to minutes per km/mile
-    value = 1/(value * 3.6 / 60);
-    if (!PreferencesUtils.isMetricUnits(this)) {
-      value *= UnitConversions.KM_TO_MI;  
-    }
-    return value;
+    return meterPerSecondToMinutesPerDistance(value);
   }
 
   @VisibleForTesting
@@ -98,10 +108,12 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
       try {
         value = Double.parseDouble(val);
         
+        Log.w(TAG, "Input value was: " + value + " min/km");
         // Input is in "minutes per kilometer (or mile)"
         // we derive meter per second as follows:
         // 1/speed * 60[to kmh/mph] / 3.6 [to m/s]
-        value = (60/value)/3.6;  
+        value = (60/value)/3.6;
+        Log.w(TAG, "Storage value was: " + value + " m/s");
         
         if (!PreferencesUtils.isMetricUnits(this)) {
           value /= UnitConversions.MI_TO_KM;
@@ -113,6 +125,15 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
       }
 
       PreferencesUtils.setString(this, key,""+value);
+  }
+  
+  public double meterPerSecondToMinutesPerDistance(double mps){
+    double value = (1/(mps / 60))/3.6;
+    Log.w(TAG, "m/s value calculate to: " + value);
+    if (!PreferencesUtils.isMetricUnits(this)) {
+      value *= UnitConversions.KM_TO_MI;  
+    }
+    return value; 
   }
   
 }
