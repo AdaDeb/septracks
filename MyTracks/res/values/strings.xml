@@ -2041,7 +2041,7 @@ limitations under the License.
     translation_description="In the 'Pace keeping system' settings, the title to configure the target pace
 
       Character limit: ~23 (1 line)">
-    Target pace (%1$s m/s)
+    Target pace
   </string>
 
   
@@ -2483,6 +2483,14 @@ limitations under the License.
 
       %1$d: an integer value. E.g., '2'.">
     %1$d km/h
+  </string>
+  <string name="value_double_minutes_kilometer"
+      translatation_description="Display a double value in minutes per kilometer(min/km)" >
+      %.1f min/km
+  </string>
+  <string name="value_double_minutes_miles"
+      translatation_description="Display a double value in minutes per miles(min/miles)" >
+      %.1f min/miles
   </string>
   <string name="value_integer_meter"
     translation_description="In a setting picker, the string format to display an integer value in

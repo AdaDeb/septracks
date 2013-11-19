@@ -24,6 +24,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
 
     targetPacePreference = (EditTextPreference) findPreference(
         getString(R.string.settings_target_pace_key));
+    
     paceWarningFrequencyPreference = (IntegerListPreference) findPreference(
         getString(R.string.settings_target_pace_reminder_frequency_key));
     
@@ -39,6 +40,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
   }
 
+
   private void configPaceWarningFrequencyPreference(
       IntegerListPreference preference, int key, int defaultValue) {
     int value = PreferencesUtils.getInt(this, key, defaultValue);
@@ -53,21 +55,21 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);    
   }
-
+  
   private void updateTargetPaceSummary(Preference preference,
       int key, String defaultValue) {
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
-    int displayValue = getTargetPaceValue(key, defaultValue);
+    double displayValue = getTargetPaceValue(key, defaultValue);
     preference.setSummary(getString(
-        metricUnits ? R.string.value_integer_kilometer_hour : R.string.value_integer_mile_hour,
+        metricUnits ? R.string.value_double_minutes_kilometer : R.string.value_double_minutes_miles,
         displayValue));
     
   }
   
-  private int getTargetPaceValue(int key,String defaultValue) {
-    int value = Integer.parseInt(PreferencesUtils.getString(this, key, defaultValue));
+  private double getTargetPaceValue(int key,String defaultValue) {
+    Double value = Double.parseDouble((PreferencesUtils.getString(this, key, defaultValue)));
     if (!PreferencesUtils.isMetricUnits(this)) {
-      value = (int) (value * UnitConversions.KM_TO_MI); // TODO exccise ? we're not dealing with 
+      value = (value * UnitConversions.KM_TO_MI); // TODO exccise ? we're not dealing with 
     }
     return value;
   }
@@ -87,15 +89,15 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     });
   }
   private void storeTargetPace(int key, String defaultValue, String val) {
-      int value;
+      double value;
       try {
-        value = Integer.parseInt(val);
+        value = Double.parseDouble(val);
         if (!PreferencesUtils.isMetricUnits(this)) {
-          value = (int) (value * UnitConversions.MI_TO_KM);
+          value = (double) (value * UnitConversions.MI_TO_KM);
         }
       } catch (NumberFormatException e) {
         Log.e(TAG, "invalid value " + val);
-        value = Integer.parseInt(defaultValue);
+        value = Double.parseDouble(defaultValue);
       }
 
       PreferencesUtils.setString(this, key,""+value);
