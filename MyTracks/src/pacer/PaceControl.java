@@ -1,9 +1,7 @@
 package pacer;
 
 import com.google.android.apps.mytracks.stats.DoubleBuffer;
-import com.google.android.maps.mytracks.R;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 /**
@@ -24,9 +22,9 @@ public class PaceControl implements PaceListener, PaceController{
   private double paceDiff; // difference between target pace and current pace in m/s
   
   private enum PaceState {
-    ON_PACE(Resources.getSystem().getString(R.string.pace_on_pace)), 
-    UNDER_PACE(Resources.getSystem().getString(R.string.pace_under_pace)), 
-    OVER_PACE(Resources.getSystem().getString(R.string.pace_over_pace));
+    ON_PACE("Reached target pace"), 
+    UNDER_PACE("Speed up"), 
+    OVER_PACE("Slow down");
     
     private final String message; 
     
@@ -39,7 +37,7 @@ public class PaceControl implements PaceListener, PaceController{
     }
   };
   
-  private PaceState previousState; // Keeps track on the status of the pace
+  private PaceState previousState = PaceState.ON_PACE; // Keeps track on the status of the pace
   
   //factor determining how far you can deviate from the target pace without warning 
   //Epsilon is max value to prevent pacer to send messages when standing still or accruing GPS
@@ -61,12 +59,12 @@ public class PaceControl implements PaceListener, PaceController{
   }
   
   private void handleSpeedUpdate(double speed){ 
-    paceBuffer.setNext(speed);
-    currentPace = paceBuffer.getAverage();
-
+    //paceBuffer.setNext(speed);
+    //currentPace = paceBuffer.getAverage();
+    currentPace = speed; 
     epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
-    Log.i("Pace", "Speed was updated. Speed was: " + speed + ", " +
-    		"currentPace: " + currentPace + ", targetPace: " + targetPace);
+    /*Log.i("Pace", "Speed was updated. Speed was: " + speed + ", " +
+    		"currentPace: " + currentPace + ", targetPace: " + targetPace);*/
     
     paceDiff = currentPace - targetPace; 
        
@@ -108,7 +106,7 @@ public class PaceControl implements PaceListener, PaceController{
   // Returns a string that is used for announcing the state of the current pace.
   @Override
   public String getStateVoiceMessage(){
-    PaceState state = getState();
+    PaceState state = previousState;
     previousState = getUpdatedState();
     
     return state.message();  
