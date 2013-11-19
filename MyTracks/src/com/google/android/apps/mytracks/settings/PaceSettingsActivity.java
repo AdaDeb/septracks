@@ -27,8 +27,8 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     usePaceSystemPreference = (CheckBoxPreference) findPreference(
         getString(R.string.settings_use_pace_system_key));
   
-   // configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
-    //    PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
+    //configUsePaceSystem(usePaceSystemPreference, R.string.settings_use_pace_system_key,
+      //  PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
     
     
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,

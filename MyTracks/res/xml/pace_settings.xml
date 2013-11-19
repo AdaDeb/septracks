@@ -14,7 +14,8 @@
 	    android:inputType="numberDecimal" 
 	    android:defaultValue="1"
 	    android:key="@string/settings_target_pace_key" 
-	    android:title="@string/settings_target_pace_title" />
+	    android:title="@string/settings_target_pace_title"
+	    android:dependency="@string/settings_use_pace_system_key" />
 	<EditTextPreference
 	  	android:imeOptions="actionDone"
 	  	android:inputType="number"
