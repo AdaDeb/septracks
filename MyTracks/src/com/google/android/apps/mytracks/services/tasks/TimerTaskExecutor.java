@@ -70,14 +70,7 @@ public class TimerTaskExecutor {
     };
     timer = new Timer(TimerTaskExecutor.class.getSimpleName());
     long next = System.currentTimeMillis() + interval - (tripStatistics.getTotalTime() % interval);
-    
-    //SEP-6 Solution to fix Pace task to run once every fifth second.
-    if (periodicTask instanceof PacePeriodicTask)
-    {
-      interval = 5000;
-      next = System.currentTimeMillis() + 5000;
-    }
-      
+     
     timer.scheduleAtFixedRate(timerTask, new Date(next), interval);
   }
 

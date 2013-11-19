@@ -175,12 +175,12 @@ public class TrackRecordingService extends Service {
           }
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.voice_frequency_key))) {
-            voiceExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            voiceExecutor.setTaskFrequency(60000*PreferencesUtils.getInt(
                 context, R.string.voice_frequency_key, PreferencesUtils.VOICE_FREQUENCY_DEFAULT));
           }
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.split_frequency_key))) {
-            splitExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            splitExecutor.setTaskFrequency(60000*PreferencesUtils.getInt(
                 context, R.string.split_frequency_key, PreferencesUtils.SPLIT_FREQUENCY_DEFAULT));
           }
           if (key == null || key.equals(
@@ -319,7 +319,7 @@ public class TrackRecordingService extends Service {
     // We want the pace to have a faster interval than one minute.
     // Therefore we set a dummy value of 1 and then change it to seconds in TimerTaskExecutor.java
     // An alternative is to change the interface, but then it is needed to change all the other periodic tasks.
-    paceExecutor.setTaskFrequency(1); 
+    paceExecutor.setTaskFrequency(5000); 
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
