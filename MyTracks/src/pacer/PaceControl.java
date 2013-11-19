@@ -1,7 +1,9 @@
 package pacer;
 
 import com.google.android.apps.mytracks.stats.DoubleBuffer;
+import com.google.android.maps.mytracks.R;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 /**
@@ -22,16 +24,22 @@ public class PaceControl implements PaceListener, PaceController{
   private double paceDiff; // difference between target pace and current pace in m/s
   
   private enum PaceState {
-    ON_PACE, UNDER_PACE, OVER_PACE
+    ON_PACE(Resources.getSystem().getString(R.string.pace_on_pace)), 
+    UNDER_PACE(Resources.getSystem().getString(R.string.pace_under_pace)), 
+    OVER_PACE(Resources.getSystem().getString(R.string.pace_over_pace));
+    
+    private final String message; 
+    
+    private PaceState(String message){
+      this.message = message;
+    }
+    
+    public String message(){
+      return message; 
+    }
   };
   
   private PaceState previousState; // Keeps track on the status of the pace
-  
-  // String constants for voice messages
-  public static final String SPEED_UP = "Speed up.";
-  public static final String SLOW_DOWN = "Slow down.";
-  public static final String ON_PACE = "Reached target pace.";
-  
   
   //factor determining how far you can deviate from the target pace without warning 
   //Epsilon is max value to prevent pacer to send messages when standing still or accruing GPS
@@ -83,14 +91,8 @@ public class PaceControl implements PaceListener, PaceController{
   {
     String ret = "";
     PaceState current = getUpdatedState();
-    if(current != previousState){
-      if(current == PaceState.ON_PACE)
-        ret = ON_PACE;
-      else if(current == PaceState.OVER_PACE)
-        ret = SPEED_UP;
-      else
-        ret = SLOW_DOWN;
-    }
+    if(current != previousState)
+      return current.message();
     
     // Update the state.
     previousState = current;
@@ -109,12 +111,7 @@ public class PaceControl implements PaceListener, PaceController{
     PaceState state = getState();
     previousState = getUpdatedState();
     
-    if(state == PaceState.OVER_PACE)
-      return SLOW_DOWN;
-    else if (state == PaceState.UNDER_PACE)
-      return SPEED_UP;
-    else 
-      return ON_PACE;    
+    return state.message();  
   }
   
   private void sendPaceAlert(Double paceDiff){

@@ -1267,7 +1267,21 @@ limitations under the License.
       Character limit: ~23 (1 line)">
     Recording service
   </string>
-
+  
+  <!--  Pace -->
+  <string name="pace_on_pace"
+    translation_description="Used for speech">
+    Reached target pace.
+  </string>
+  <string name="pace_over_pace"
+    translation_description="Used for speech">
+    Too fast.
+  </string>
+  <string name="pace_under_pace"
+    translation_description="Used for speech">
+    Too slow.
+  </string>
+  
   <!-- Permission -->
   <string name="permission_notification_description"
     translation_description="The permission description the Google Play Store shows during app
