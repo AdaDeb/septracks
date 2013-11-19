@@ -26,8 +26,8 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
   }
   
   protected String getAnnouncement(PaceController pc){
-    //return pc.getPaceMessage(); // Only speak if pace-state changes
-    return pc.getStateVoiceMessage(); // Speak state every 5th second
+    return pc.getPaceMessage(); // Only speak if pace-state changes
+    //return pc.getStateVoiceMessage(); // Speak state every 5th second
   }  
   
   @Override
@@ -62,7 +62,9 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
       Log.i(TAG, "Speech is not allowed at this time.");
       return;
     }
-    speakAnnouncement(getAnnouncement(pc));
+    String toAnnounce = getAnnouncement(pc);
+    if(toAnnounce.length() > 0)
+      speakAnnouncement(toAnnounce);
   }
 
 }

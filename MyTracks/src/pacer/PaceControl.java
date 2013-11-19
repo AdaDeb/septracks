@@ -18,6 +18,8 @@ public class PaceControl implements PaceListener, PaceController{
   private int warningPeriod;  // period is in s (period=60 means one potential warning a minute)
   private double paceDiff; // difference between target pace and current pace in m/s
   
+  private long lastRepeat = 0; // used for repeating voice messages
+  
   private enum PaceState {
     ON_PACE("Reached target pace"), 
     UNDER_PACE("Speed up"), 
@@ -57,6 +59,7 @@ public class PaceControl implements PaceListener, PaceController{
   
   private void handleSpeedUpdate(double speed){ 
     
+    Log.i("voice", "Current speed:" + Double.toString(speed));
     currentPace = speed; 
     epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
     paceDiff = currentPace - targetPace; 
@@ -79,16 +82,28 @@ public class PaceControl implements PaceListener, PaceController{
     Log.i("voice", "Current state: " + newState.message()); 
     return newState;
   }
-
+  
   // Returns a message of the pace used for voice output.
   public String getPaceMessage()
   {
     String ret = "";
     PaceState current = getUpdatedState();
-    if(current != previousState)
-      return current.message();
+    if(!current.message().equals(previousState.message()))
+    {
+      if(current.message().equals(PaceState.OVER_PACE.message()) || current.message().equals(PaceState.UNDER_PACE.message()))
+      {
+        lastRepeat = System.currentTimeMillis();
+      }
+      ret = current.message();
+    }
+    else if((current.message().equals(PaceState.OVER_PACE.message()) || current.message().equals(PaceState.UNDER_PACE.message())) && 
+        (System.currentTimeMillis()-5000 > lastRepeat))
+    {
+      lastRepeat = System.currentTimeMillis();
+      ret = current.message();
+    }
     
-    // Update the state.
+    // Update the state.s
     previousState = current;
     
     return ret;
@@ -108,7 +123,7 @@ public class PaceControl implements PaceListener, PaceController{
     return state.message();  
   }
   
-  private void sendPaceAlert(Double paceDiff){
+  private void sendPaceAlert(double paceDiff){
     Log.i(TAG, "PACE ALERT!");
     if (paceDiff > 0){
       Log.i(TAG, "SLOW DOWN");
