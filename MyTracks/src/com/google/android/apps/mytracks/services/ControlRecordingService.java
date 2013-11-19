@@ -52,7 +52,6 @@ public class ControlRecordingService extends IntentService implements ServiceCon
   @Override
   public void onCreate() {
     super.onCreate();
-
     Intent newIntent = new Intent(this, TrackRecordingService.class);
     startService(newIntent);
     bindService(newIntent, this, 0);

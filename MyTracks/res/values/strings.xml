@@ -3059,4 +3059,13 @@ limitations under the License.
     translation_description="Sets the description for the xaxis settings">
     Set which unit is displayed on the X-axis
   </string>
+    <string name="gamification_title">Gamification</string>
+    <string name="gamification_criterion_id">id</string>
+    <string name="gamification_criterion_lengthlasttrack">lengthLastTrack</string>
+    <string name="gamification_criterion_message">message</string>
+    <string name="gamification_criterion_lengthtotal">lengthTotal</string>
+    <string name="gamification_criterion_totaltrips">totalTrips</string>
+    <string name="gamification_criterion_completed">completed</string>
+    <string name="gamification_criterion_title">title</string>
+    
 </resources>

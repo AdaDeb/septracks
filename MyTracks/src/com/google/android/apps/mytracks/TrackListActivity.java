@@ -31,6 +31,7 @@ import com.google.android.apps.mytracks.io.file.SaveActivity;
 import com.google.android.apps.mytracks.io.file.TrackFileFormat;
 import com.google.android.apps.mytracks.io.sendtogoogle.SendRequest;
 import com.google.android.apps.mytracks.io.sync.SyncUtils;
+import com.google.android.apps.mytracks.services.GamificationService;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.MyTracksLocationManager;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
@@ -312,6 +313,7 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
   private MenuItem exportAllMenuItem;
   private MenuItem importAllMenuItem;
   private MenuItem deleteAllMenuItem;
+  private MenuItem gamificationMenuItem;
 
   private boolean startGps = false; // true to start gps
   private boolean startNewRecording = false; // true to start a new recording
@@ -325,6 +327,9 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
     }
     Intent intent = new Intent(this, RemoveTempFilesService.class);
     startService(intent);
+    
+    Intent gamificationService = new Intent(this, GamificationService.class);
+    startService(gamificationService);
 
     myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -474,6 +479,7 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
     exportAllMenuItem = menu.findItem(R.id.track_list_export_all);
     importAllMenuItem = menu.findItem(R.id.track_list_import_all);
     deleteAllMenuItem = menu.findItem(R.id.track_list_delete_all);
+    gamificationMenuItem = menu.findItem(R.id.track_gamification);
     return true;
   }
   
@@ -572,6 +578,10 @@ public class TrackListActivity extends AbstractSendToGoogleActivity
         return true;
       case R.id.track_list_help:
         intent = IntentUtils.newIntent(this, HelpActivity.class);
+        startActivity(intent);
+        return true;
+      case R.id.track_gamification:
+        intent = IntentUtils.newIntent(this, GamificationActivity.class);
         startActivity(intent);
         return true;
       default:

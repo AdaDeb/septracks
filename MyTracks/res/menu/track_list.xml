@@ -58,4 +58,8 @@ limitations under the License.
     android:icon="@drawable/ic_menu_help"
     android:id="@+id/track_list_help"
     android:title="@string/menu_help"/>
+  <item
+    android:icon="@drawable/ic_menu_help"
+    android:id="@+id/track_gamification"
+    android:title="@string/gamification_title"/>
 </menu>

@@ -200,6 +200,7 @@ limitations under the License.
         android:value="com.google.android.apps.mytracks.TrackListActivity" />
     </activity>
     <activity android:name="com.google.android.apps.mytracks.TrackEditActivity" />
+    <activity android:name="com.google.android.apps.mytracks.GamificationActivity" />
     <activity android:name="com.google.android.apps.mytracks.TrackListActivity" >
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -248,6 +249,8 @@ limitations under the License.
     </service>
     <service
       android:name="com.google.android.apps.mytracks.services.ActivityRecognitionIntentService" />
+    <service
+      android:name="com.google.android.apps.mytracks.services.GamificationService" />
     <service
       android:exported="false"
       android:name="com.google.android.apps.mytracks.services.ControlRecordingService" />

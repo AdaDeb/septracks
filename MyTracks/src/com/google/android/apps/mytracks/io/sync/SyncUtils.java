@@ -214,7 +214,7 @@ public class SyncUtils {
     File file = new File();
     file.setTitle(folderName);
     file.setMimeType(FOLDER_MIME_TYPE);
-    return drive.files().insert(file).execute();
+    return drive.files().insert(file).execute(); 
   }
 
   /**
