@@ -11,8 +11,6 @@ public interface PaceController {
    * Value == 0 means user should retain pace 
    * @return double representing how user should change pace
    */
-  public String getStateVoiceMessage();
-  
   public double getTargetPace();
   
   public double getCurrentPace();

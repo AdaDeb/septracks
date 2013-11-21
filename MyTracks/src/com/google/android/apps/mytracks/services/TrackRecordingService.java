@@ -105,6 +105,7 @@ public class TrackRecordingService extends Service {
   private static final String TAG = TrackRecordingService.class.getSimpleName();
   private static final long ONE_SECOND = 1000; // in milliseconds
   private static final long ONE_MINUTE = 60 * ONE_SECOND; // in milliseconds
+  private static final int MILLSECONDS_TO_MINUTE = 60000; //SEP-6 converts milliseconds to minutes
   
   @VisibleForTesting
   static final int MAX_AUTO_RESUME_TRACK_RETRY_ATTEMPTS = 3;
@@ -173,14 +174,16 @@ public class TrackRecordingService extends Service {
             voiceExecutor.setMetricUnits(metricUnits);
             splitExecutor.setMetricUnits(metricUnits);
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.voice_frequency_key))) {
-            voiceExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            voiceExecutor.setTaskFrequency(MILLSECONDS_TO_MINUTE*PreferencesUtils.getInt(
                 context, R.string.voice_frequency_key, PreferencesUtils.VOICE_FREQUENCY_DEFAULT));
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT      
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.split_frequency_key))) {
-            splitExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            splitExecutor.setTaskFrequency(MILLSECONDS_TO_MINUTE*PreferencesUtils.getInt(
                 context, R.string.split_frequency_key, PreferencesUtils.SPLIT_FREQUENCY_DEFAULT));
           }
           if (key == null || key.equals(
@@ -324,12 +327,8 @@ public class TrackRecordingService extends Service {
     paceController = PaceFactory.getPaceController();
     
     paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
-    // SEP-6 Frequency is changed for pace in TimerTaskExecutor.java
-    // The setTaskFrequency, takes an integer that is in minutes.
-    // We want the pace to have a faster interval than one minute.
-    // Therefore we set a dummy value of 1 and then change it to seconds in TimerTaskExecutor.java
-    // An alternative is to change the interface, but then it is needed to change all the other periodic tasks.
-    paceExecutor.setTaskFrequency(1); 
+    //SEP-6 Set paceExecutor to check status of the current pace twice every second(i.e. 500 ms)
+    paceExecutor.setTaskFrequency(500); 
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);

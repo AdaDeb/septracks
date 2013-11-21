@@ -91,7 +91,8 @@ public class PeriodicTaskExecutor {
       if (timerTaskExecutor == null) {
         timerTaskExecutor = new TimerTaskExecutor(periodicTask, trackRecordingService);
       }
-      timerTaskExecutor.scheduleTask(taskFrequency * MINUTE_TO_MILLISECONDS);
+      //SEP-6 The input have been changed from minutes to milliseconds
+      timerTaskExecutor.scheduleTask(taskFrequency);
     } else {
       // For distance periodic task
       calculateNextTaskDistance();
