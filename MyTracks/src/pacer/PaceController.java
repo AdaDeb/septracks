@@ -19,7 +19,7 @@ public interface PaceController {
     
   public void setWarningPeriod(int period);
 
-  public void setTargetPace(int pace);
+  public void setTargetPace(double pace);
   
   public String getPaceMessage();
   

@@ -148,13 +148,13 @@ public class PaceControl implements PaceListener, PaceController{
   }
 
   @Override
-  public void setTargetPace(int pace) {
-    targetPace = (double) pace; // TODO double input     
+  public void setTargetPace(double pace) {
+    targetPace = pace;     
   }
   
   @Override
   public PaceListener asPaceListener(){
     return (PaceListener) this;
   }
-  
+
 }
