@@ -24,10 +24,9 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
   public PacePeriodicTask(Context context) {
     super(context);
   }
-  
+  //Used for getting the new status of the pace.
   protected String getAnnouncement(PaceController pc){
-    return pc.getPaceMessage(); // Only speak if pace-state changes
-    //return pc.getStateVoiceMessage(); // Speak state every 5th second
+    return pc.getPaceMessage();
   }  
   
   @Override

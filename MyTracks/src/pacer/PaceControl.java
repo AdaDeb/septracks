@@ -8,7 +8,7 @@ import android.util.Log;
  * Periodically issues voice alerts to speed up or slow down if the user's
  * current pace falls outside a distance from the target pace.  
  * 
- * @author axellj, urdell
+ * @author axellj, urdell, B.Lexell, J.Grundén
  */
 public class PaceControl implements PaceListener, PaceController{
   private static final String TAG = PaceControl.class.getSimpleName();
@@ -83,7 +83,11 @@ public class PaceControl implements PaceListener, PaceController{
     return newState;
   }
   
-  // Returns a message of the pace used for voice output.
+  /*
+   * getPaceMessage returns a string with the current status of the pace. The string will be empty if the state is the same as
+   * the previous state. If the state is under or over pace then the messages will be repeated every fifth second. 
+   * This method is used by paceperiodtask.
+   */
   public String getPaceMessage()
   {
     String ret = "";
@@ -112,15 +116,6 @@ public class PaceControl implements PaceListener, PaceController{
   private PaceState getState(){
     sendPaceAlert(paceDiff); // DEBUG remove
     return previousState;
-  }
-  
-  // Returns a string that is used for announcing the state of the current pace.
-  @Override
-  public String getStateVoiceMessage(){
-    PaceState state = previousState;
-    previousState = getUpdatedState();
-    
-    return state.message();  
   }
   
   private void sendPaceAlert(double paceDiff){
