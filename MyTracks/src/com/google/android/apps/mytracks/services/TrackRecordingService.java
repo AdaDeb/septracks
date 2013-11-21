@@ -660,8 +660,12 @@ public class TrackRecordingService extends Service {
     double targetPace = Double.parseDouble(PreferencesUtils.getString(this, R.string.settings_target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT));
     int paceWarningPeriod = PreferencesUtils.getInt(this, 
         R.string.settings_target_pace_reminder_frequency_key, PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
+    int deviation = PreferencesUtils.getInt(this, 
+        R.string.settings_target_pace_threshhold_key,
+        PreferencesUtils.PACE_KEEPER_PACE_THRESHHOLD_DEFAULT);
     paceController.setTargetPace(targetPace);
     paceController.setWarningPeriod(paceWarningPeriod);
+    paceController.setWarningThreshhold(deviation);
     
     trackTripStatisticsUpdater.setPaceListener(paceController.asPaceListener());
 
