@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -36,12 +37,17 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -186,6 +192,12 @@ public class ChartView extends View {
     setFocusable(true);
     setClickable(true);
     updateDimensions();
+
+
+
+
+
+
   }
 
   /**
@@ -994,4 +1006,26 @@ public class ChartView extends View {
   public boolean isMetricUnits() {
     return metricUnits;
   }
+
+  //TODO: comment
+  public void saveChartPhoto() {
+    getRootView();
+    setDrawingCacheEnabled(true);
+    Bitmap chartBitmap = getDrawingCache();
+    String extr = Environment.getExternalStorageDirectory().toString();
+    File myPath = new File(extr, "mytracks_chart.jpg");
+    FileOutputStream file = null;
+    try {
+      file = new FileOutputStream(myPath);
+      chartBitmap.compress(Bitmap.CompressFormat.JPEG, 100, file);
+      file.flush();
+      file.close();
+      MediaStore.Images.Media.insertImage(this.getContext().getContentResolver(), chartBitmap, "Screen", "screen");
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 }

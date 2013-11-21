@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -117,7 +118,12 @@ public class FacebookLogin extends Activity {
   private void postPhoto() {
     if (hasPublishPermission()) {
       //TODO: get bitmap in other way
-      Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.com_facebook_logo);
+      
+      String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
+      Bitmap image = BitmapFactory.decodeFile(mytracksimg);
+      System.out.println("Path: " + mytracksimg);
+       
+      //Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.com_facebook_logo);
       Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), image, new Request.Callback() {
         @Override
         public void onCompleted(Response response) {
