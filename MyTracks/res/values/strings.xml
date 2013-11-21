@@ -2049,7 +2049,7 @@ limitations under the License.
     translation_description="In the 'Pace keeping system' settings, the title to configure the reminder frequency
 
       Character limit: ~23 (1 line)">
-   FREQUENCY YO
+   Voice reminder frequency
   </string>
   <string name="settings_target_pace_title"
     translation_description="In the 'Pace keeping system' settings, the title to configure the target pace
