@@ -16,6 +16,7 @@
 
 package com.google.android.apps.mytracks;
 
+import com.google.android.apps.mytracks.facebook.FacebookLogin;
 import com.google.android.apps.mytracks.fragments.CheckPermissionFragment;
 import com.google.android.apps.mytracks.fragments.CheckPermissionFragment.CheckPermissionCaller;
 import com.google.android.apps.mytracks.fragments.ChooseAccountDialogFragment;
@@ -55,7 +56,10 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -71,8 +75,8 @@ import java.io.IOException;
  * @author Jimmy Shih
  */
 public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActivity implements
-    ChooseAccountCaller, ConfirmSyncCaller, CheckPermissionCaller, ShareTrackCaller, ConfirmPlayCaller,
-    ConfirmDeleteCaller {
+    ChooseAccountCaller, ConfirmSyncCaller, CheckPermissionCaller, ShareTrackCaller,
+    ConfirmPlayCaller, ConfirmDeleteCaller {
 
   private static final String TAG = AbstractMyTracksActivity.class.getSimpleName();
   private static final String SEND_REQUEST_KEY = "send_request_key";
@@ -80,8 +84,8 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   private static final int FUSION_TABLES_REQUEST_CODE = 1;
   private static final int SPREADSHEETS_REQUEST_CODE = 2;
   private static final int DELETE_REQUEST_CODE = 3;
-  protected static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 4; 
-  
+  protected static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 4;
+
   private SendRequest sendRequest;
 
   @Override
@@ -119,22 +123,22 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
    */
   protected void sendToGoogle(SendRequest request) {
     sendRequest = request;
-    new ChooseAccountDialogFragment().show(
-        getSupportFragmentManager(), ChooseAccountDialogFragment.CHOOSE_ACCOUNT_DIALOG_TAG);
+    new ChooseAccountDialogFragment().show(getSupportFragmentManager(),
+        ChooseAccountDialogFragment.CHOOSE_ACCOUNT_DIALOG_TAG);
   }
 
   @Override
   public void onChooseAccountDone() {
-    String googleAccount = PreferencesUtils.getString(
-        this, R.string.google_account_key, PreferencesUtils.GOOGLE_ACCOUNT_DEFAULT);
+    String googleAccount = PreferencesUtils.getString(this, R.string.google_account_key,
+        PreferencesUtils.GOOGLE_ACCOUNT_DEFAULT);
     if (googleAccount == null || googleAccount.equals(PreferencesUtils.GOOGLE_ACCOUNT_DEFAULT)) {
       return;
     }
     sendRequest.setAccount(new Account(googleAccount, Constants.ACCOUNT_TYPE));
-  
+
     if (sendRequest.isSendDrive() && sendRequest.isDriveSync() && sendRequest.isDriveSyncConfirm()) {
-      new ConfirmSyncDialogFragment().show(
-          getSupportFragmentManager(), ConfirmSyncDialogFragment.CONFIRM_SYNC_DIALOG_TAG);
+      new ConfirmSyncDialogFragment().show(getSupportFragmentManager(),
+          ConfirmSyncDialogFragment.CONFIRM_SYNC_DIALOG_TAG);
     } else {
       onConfirmSyncDone(true);
     }
@@ -153,10 +157,10 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
       if (!needDrivePermission) {
         needDrivePermission = sendRequest.isSendSpreadsheets();
       }
-  
+
       if (needDrivePermission) {
-        Fragment fragment = CheckPermissionFragment.newInstance(
-            sendRequest.getAccount().name, SendToGoogleUtils.DRIVE_SCOPE);
+        Fragment fragment = CheckPermissionFragment.newInstance(sendRequest.getAccount().name,
+            SendToGoogleUtils.DRIVE_SCOPE);
         getSupportFragmentManager().beginTransaction()
             .add(fragment, CheckPermissionFragment.CHECK_PERMISSION_TAG).commit();
       } else {
@@ -230,15 +234,14 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   private void onDrivePermissionSuccess() {
     // Check Maps permission
     if (sendRequest.isSendMaps()) {
-      AccountManager.get(this).getAuthToken(
-          sendRequest.getAccount(), MapsConstants.SERVICE_NAME, null, this,
-          new AccountManagerCallback<Bundle>() {
-              @Override
+      AccountManager.get(this).getAuthToken(sendRequest.getAccount(), MapsConstants.SERVICE_NAME,
+          null, this, new AccountManagerCallback<Bundle>() {
+            @Override
             public void run(AccountManagerFuture<Bundle> future) {
               try {
                 if (future.getResult().getString(AccountManager.KEY_AUTHTOKEN) != null) {
                   runOnUiThread(new Runnable() {
-                      @Override
+                    @Override
                     public void run() {
                       onMapsPermissionSuccess();
                     }
@@ -255,7 +258,7 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
                 Log.d(TAG, "Unable to get auth token", e);
               }
               runOnUiThread(new Runnable() {
-                  @Override
+                @Override
                 public void run() {
                   onPermissionFailure();
                 }
@@ -270,10 +273,10 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   private void onMapsPermissionSuccess() {
     // Check Fusion Tables permission
     if (sendRequest.isSendFusionTables()) {
-      Fragment fragment = CheckPermissionFragment.newInstance(
-          sendRequest.getAccount().name, SendToGoogleUtils.FUSION_TABLES_SCOPE);
-      getSupportFragmentManager()
-          .beginTransaction().add(fragment, CheckPermissionFragment.CHECK_PERMISSION_TAG).commit();
+      Fragment fragment = CheckPermissionFragment.newInstance(sendRequest.getAccount().name,
+          SendToGoogleUtils.FUSION_TABLES_SCOPE);
+      getSupportFragmentManager().beginTransaction()
+          .add(fragment, CheckPermissionFragment.CHECK_PERMISSION_TAG).commit();
     } else {
       onFusionTablesSuccess();
     }
@@ -282,10 +285,10 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   private void onFusionTablesSuccess() {
     // Check Spreadsheets permission
     if (sendRequest.isSendSpreadsheets()) {
-      Fragment fragment = CheckPermissionFragment.newInstance(
-          sendRequest.getAccount().name, SendToGoogleUtils.SPREADSHEETS_SCOPE);
-      getSupportFragmentManager()
-          .beginTransaction().add(fragment, CheckPermissionFragment.CHECK_PERMISSION_TAG).commit();
+      Fragment fragment = CheckPermissionFragment.newInstance(sendRequest.getAccount().name,
+          SendToGoogleUtils.SPREADSHEETS_SCOPE);
+      getSupportFragmentManager().beginTransaction()
+          .add(fragment, CheckPermissionFragment.CHECK_PERMISSION_TAG).commit();
     } else {
       onSpreadsheetsPermissionSuccess();
     }
@@ -324,8 +327,31 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
         SyncUtils.enableSync(sendRequest.getAccount());
         return;
       } else if (sendRequest.isDriveShare()) {
-        ShareTrackDialogFragment.newInstance(sendRequest.getTrackId())
-            .show(getSupportFragmentManager(), ShareTrackDialogFragment.SHARE_TRACK_DIALOG_TAG);
+
+        final CharSequence[] share_track_radios = { "Share on Google Drive", "Share on Facebook" };
+        Context c = this;
+        AlertDialog.Builder shareRoot = new AlertDialog.Builder(c).setTitle("Share Track")
+            .setSingleChoiceItems(share_track_radios, -1, new DialogInterface.OnClickListener() {
+
+              @Override
+              public void onClick(DialogInterface dialog, int selectedOption) {
+                // TODO Auto-generated method stub
+
+                if (selectedOption == 0) // User chose to share on Google Drive.
+                {
+                  ShareTrackDialogFragment.newInstance(sendRequest.getTrackId()).show(
+                      getSupportFragmentManager(), ShareTrackDialogFragment.SHARE_TRACK_DIALOG_TAG);
+
+                } // end if google drive selected
+                else { // share on facebook
+                  Intent fbIntent = new Intent(getBaseContext(), FacebookLogin.class);
+                  startActivity(fbIntent);
+                }
+                dialog.dismiss();
+              }
+            });
+        AlertDialog shareAlertDialog = shareRoot.create();
+        shareAlertDialog.show();
         return;
       } else {
         next = SendDriveActivity.class;
@@ -339,8 +365,8 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
     } else {
       next = UploadResultActivity.class;
     }
-    Intent intent = IntentUtils.newIntent(this, next)
-        .putExtra(SendRequest.SEND_REQUEST_KEY, sendRequest);
+    Intent intent = IntentUtils.newIntent(this, next).putExtra(SendRequest.SEND_REQUEST_KEY,
+        sendRequest);
     startActivity(intent);
   }
 
@@ -355,8 +381,8 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   public void onShareTrackDone(String emails, boolean makePublic) {
     sendRequest.setDriveShareEmails(emails);
     sendRequest.setDriveSharePublic(makePublic);
-    Intent intent = IntentUtils.newIntent(this, SendDriveActivity.class)
-        .putExtra(SendRequest.SEND_REQUEST_KEY, sendRequest);
+    Intent intent = IntentUtils.newIntent(this, SendDriveActivity.class).putExtra(
+        SendRequest.SEND_REQUEST_KEY, sendRequest);
     startActivity(intent);
   }
 
@@ -368,16 +394,16 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
   protected void confirmPlay(long[] trackIds) {
     AnalyticsUtils.sendPageViews(this, AnalyticsUtils.ACTION_PLAY);
     if (GoogleEarthUtils.isEarthInstalled(this)) {
-      if (PreferencesUtils.getBoolean(
-          this, R.string.confirm_play_earth_key, PreferencesUtils.CONFIRM_PLAY_EARTH_DEFAULT)) {
-        ConfirmPlayDialogFragment.newInstance(trackIds)
-            .show(getSupportFragmentManager(), ConfirmPlayDialogFragment.CONFIRM_PLAY_DIALOG_TAG);
+      if (PreferencesUtils.getBoolean(this, R.string.confirm_play_earth_key,
+          PreferencesUtils.CONFIRM_PLAY_EARTH_DEFAULT)) {
+        ConfirmPlayDialogFragment.newInstance(trackIds).show(getSupportFragmentManager(),
+            ConfirmPlayDialogFragment.CONFIRM_PLAY_DIALOG_TAG);
       } else {
         onConfirmPlayDone(trackIds);
       }
     } else {
-      new InstallEarthDialogFragment().show(
-          getSupportFragmentManager(), InstallEarthDialogFragment.INSTALL_EARTH_DIALOG_TAG);
+      new InstallEarthDialogFragment().show(getSupportFragmentManager(),
+          InstallEarthDialogFragment.INSTALL_EARTH_DIALOG_TAG);
     }
   }
 
@@ -389,10 +415,10 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
         .putExtra(SaveActivity.EXTRA_PLAY_TRACK, true);
     startActivity(intent);
   }
-  
+
   protected void deleteTrack(long[] trackIds) {
-    ConfirmDeleteDialogFragment.newInstance(trackIds)
-        .show(getSupportFragmentManager(), ConfirmDeleteDialogFragment.CONFIRM_DELETE_DIALOG_TAG);
+    ConfirmDeleteDialogFragment.newInstance(trackIds).show(getSupportFragmentManager(),
+        ConfirmDeleteDialogFragment.CONFIRM_DELETE_DIALOG_TAG);
   }
 
   abstract protected TrackRecordingServiceConnection getTrackRecordingServiceConnection();
@@ -414,8 +440,8 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
       }
     }
     if (stopRecording) {
-      TrackRecordingServiceConnectionUtils.stopRecording(
-          this, getTrackRecordingServiceConnection(), false);
+      TrackRecordingServiceConnectionUtils.stopRecording(this,
+          getTrackRecordingServiceConnection(), false);
     }
     Intent intent = IntentUtils.newIntent(this, DeleteActivity.class);
     intent.putExtra(DeleteActivity.EXTRA_TRACK_IDS, trackIds);
