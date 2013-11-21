@@ -270,5 +270,10 @@ limitations under the License.
       <item >20</item>
       <item >30</item>
   </string-array>
+  <string-array name="pace_keeper_threshhold_values">
+      <item >10</item>
+      <item >20</item>
+      <item >30</item>
+  </string-array>
 
 </resources>

@@ -254,6 +254,12 @@ public class TrackRecordingService extends Service {
                     PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT) * 1000 : 0; 
             paceExecutor.setTaskFrequency(paceFrequency);
           }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_target_pace_threshhold_key))) {
+            paceController.setWarningThreshhold(PreferencesUtils.getInt(context,
+                R.string.settings_target_pace_threshhold_key,
+                PreferencesUtils.PACE_KEEPER_PACE_THRESHHOLD_DEFAULT));
+          }
             
         }
       };

@@ -94,4 +94,5 @@ limitations under the License.
   <string name="settings_target_pace_key">settingsTargetPace</string>
   <string name="settings_target_pace_reminder_frequency_key">settingsTargetPaceReminderFrequency</string>
   <string name="settings_target_pace_system_key">settingsTargetPaceSystem</string>
+  <string name="settings_target_pace_threshhold_key">settingTargetPaceTreshhold</string>
 </resources>

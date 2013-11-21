@@ -17,6 +17,15 @@ public class PaceControl implements PaceListener, PaceController{
   private Double currentPace = 0D; // pace is in m/s
   private int warningPeriod;  // period is in s (period=60 means one potential warning a minute)
   private double paceDiff; // difference between target pace and current pace in m/s
+
+   
+  // factor determining how far you can deviate from the target pace without warning
+ 
+  // Epsilon initially is max value to prevent pacer 
+  // from sending messages when standing still or accruing GPS
+  private double epsilon = Double.MAX_VALUE; 
+  
+  private double deviation = 0.1d; // is expressed as a factor [0,1] 
   
   private long lastRepeat = 0; // used for repeating voice messages
   
@@ -39,9 +48,8 @@ public class PaceControl implements PaceListener, PaceController{
   
   private PaceState previousState = PaceState.STANDING_STILL; // Keeps track on the status of the pace
   
-  //factor determining how far you can deviate from the target pace without warning 
-  //Epsilon is max value to prevent pacer to send messages when standing still or accruing GPS
-  private Double epsilon = Double.MAX_VALUE;  
+  
+    
   
   public PaceControl(int targetPace){
     //TODO dynamic size of buffer - take GPS settings into account!
@@ -61,7 +69,7 @@ public class PaceControl implements PaceListener, PaceController{
     
     Log.i("voice", "Current speed:" + Double.toString(speed));
     currentPace = speed; 
-    epsilon = 0.1 * currentPace; // TODO use a logarithmic or similar to account for different activities
+    epsilon = deviation * currentPace; // TODO use a logarithmic or similar to account for different activities
     paceDiff = currentPace - targetPace; 
        
   }
@@ -155,6 +163,13 @@ public class PaceControl implements PaceListener, PaceController{
   @Override
   public PaceListener asPaceListener(){
     return (PaceListener) this;
+  }
+
+  @Override
+  public void setWarningThreshhold(int deviation) {
+    // deviation is a integer percentage value, e.g. 10 = we can deviate by 0.9
+    this.deviation = (100-deviation)/100; 
+    
   }
 
 }

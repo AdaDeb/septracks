@@ -124,7 +124,7 @@ public class PreferencesUtils {
   // Pace keeper
   public static final String PACE_KEEPER_PACE_DEFAULT = "6"; // in km/m
   public static final int PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT = 5; // in seconds
-
+  public static final int PACE_KEEPER_PACE_THRESHHOLD_DEFAULT = 10; // in % of target pace
   public static final boolean PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT = false; 
   
   private PreferencesUtils() {}

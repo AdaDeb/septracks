@@ -16,7 +16,8 @@ import android.util.Log;
 public class PaceSettingsActivity extends AbstractSettingsActivity {
   private static final String TAG = PaceSettingsActivity.class.getSimpleName();
   private EditTextPreference targetPacePreference;
-  private IntegerListPreference paceWarningFrequencyPreference; 
+  private IntegerListPreference paceWarningFrequencyPreference;
+  private IntegerListPreference paceWarningThreshholdPreference;
   
   
   @SuppressWarnings("deprecation")
@@ -30,6 +31,9 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     paceWarningFrequencyPreference = (IntegerListPreference) findPreference(
         getString(R.string.settings_target_pace_reminder_frequency_key));
     
+    paceWarningThreshholdPreference = (IntegerListPreference) findPreference(
+        getString(R.string.settings_target_pace_threshhold_key));
+    
     configTargetPacePreference(targetPacePreference, R.string.settings_target_pace_key,
         PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
 
@@ -40,9 +44,27 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
         R.string.settings_target_pace_reminder_frequency_key,
         PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
     
+    configPaceWarningThreshholdPreference(paceWarningThreshholdPreference, 
+        R.string.settings_target_pace_threshhold_key,
+        PreferencesUtils.PACE_KEEPER_PACE_THRESHHOLD_DEFAULT);
+    
   }
 
-
+  private void configPaceWarningThreshholdPreference(
+      IntegerListPreference preference, int key, int defaultValue) {
+    int value = PreferencesUtils.getInt(this, key, defaultValue);
+    String[] values = getResources().getStringArray(R.array.pace_keeper_threshhold_values);
+    String[] options = new String[values.length];
+    String[] summary = new String[values.length];
+    for (int i = 0; i < values.length; i++) {
+      int val = Integer.parseInt(values[i]);
+      options[i] = getString(R.string.value_integer_percent, val);
+      summary[i] = getString(R.string.value_integer_percent, val);
+    }
+    
+    configureListPreference(preference, summary, options, values, String.valueOf(value), null);
+  }
+  
   private void configPaceWarningFrequencyPreference(
       IntegerListPreference preference, int key, int defaultValue) {
     int value = PreferencesUtils.getInt(this, key, defaultValue);

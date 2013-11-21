@@ -2051,6 +2051,12 @@ limitations under the License.
       Character limit: ~23 (1 line)">
    Voice reminder frequency
   </string>
+  <string name="settings_target_pace_threshhold_title"
+    translation_description="In the 'Pace keeping system' settings, the title to configure how close to target pace one must keep
+
+      Character limit: ~23 (1 line)">
+   Allowed pace deviation
+  </string>
   <string name="settings_target_pace_title"
     translation_description="In the 'Pace keeping system' settings, the title to configure the target pace
 

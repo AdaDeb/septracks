@@ -23,6 +23,8 @@ public interface PaceController {
   
   public String getPaceMessage();
   
+  public void setWarningThreshhold(int deviation);
+  
   /**
    * Returns this PaceController as a PaceListener
    * @return a PaceListener view of this PaceController
