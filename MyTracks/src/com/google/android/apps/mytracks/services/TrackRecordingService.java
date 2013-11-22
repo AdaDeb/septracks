@@ -239,20 +239,16 @@ public class TrackRecordingService extends Service {
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_target_pace_reminder_frequency_key))) {
-            paceExecutor.setTaskFrequency(PreferencesUtils.getInt(context,
+            paceController.setWarningPeriod(PreferencesUtils.getInt(context,
                 R.string.settings_target_pace_reminder_frequency_key,
-                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT) * 1000);
+                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_use_pace_system_key))){
             boolean usePace = PreferencesUtils.getBoolean(context, 
                 R.string.settings_use_pace_system_key, 
                 PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
-            int paceFrequency = usePace ? 
-                PreferencesUtils.getInt(context,
-                    R.string.settings_target_pace_reminder_frequency_key,
-                    PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT) * 1000 : 0; 
-            paceExecutor.setTaskFrequency(paceFrequency);
+            paceExecutor.setTaskFrequency(usePace ? 500 : 0);
           }
           if (key == null || key.equals(
               PreferencesUtils.getKey(context, R.string.settings_target_pace_threshhold_key))) {
@@ -336,7 +332,7 @@ public class TrackRecordingService extends Service {
     
     paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
     //SEP-6 Set paceExecutor to check status of the current pace twice every second(i.e. 500 ms)
-    paceExecutor.setTaskFrequency(500); 
+    paceExecutor.setTaskFrequency(500);  // TODO externalize 
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -707,6 +703,10 @@ public class TrackRecordingService extends Service {
     TripStatistics tripStatistics = track.getTripStatistics();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(tripStatistics.getStartTime());
     
+    paceController = PaceFactory.getPaceController(Double.parseDouble(
+        PreferencesUtils.getString(context,
+        R.string.settings_target_pace_key,
+        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT)));
     trackTripStatisticsUpdater.setPaceListener(paceController.asPaceListener());
 
     long markerStartTime;

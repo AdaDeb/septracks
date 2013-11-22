@@ -51,8 +51,7 @@ public class PaceControl implements PaceListener, PaceController{
   
     
   
-  public PaceControl(int targetPace){
-    //TODO dynamic size of buffer - take GPS settings into account!
+  public PaceControl(double targetPace){
     this.targetPace = (double) targetPace;
   }
   
@@ -67,10 +66,13 @@ public class PaceControl implements PaceListener, PaceController{
   
   private void handleSpeedUpdate(double speed){ 
     
-    Log.i("voice", "Current speed:" + Double.toString(speed));
     currentPace = speed; 
     epsilon = deviation * currentPace; // TODO use a logarithmic or similar to account for different activities
+    Log.i(TAG, "curDeviation: " + deviation + ", epsilon: " + epsilon);
     paceDiff = currentPace - targetPace; 
+    Log.i(TAG, "targetPace: " + targetPace + " , curPace: " + currentPace + ", paceDiff: " + paceDiff);
+    boolean onPace = Math.abs(paceDiff) < epsilon; // DEBUG
+    Log.i(TAG, "Are we on pace? " + onPace);
        
   }
   
@@ -79,15 +81,20 @@ public class PaceControl implements PaceListener, PaceController{
   {
     
     PaceState newState;
-    if(currentPace == 0)
+    if(currentPace == 0){
       newState = PaceState.STANDING_STILL;
-    else if(Math.abs(paceDiff) < epsilon)
+    }
+    else if(Math.abs(paceDiff) < epsilon){
+      Log.i(TAG, "WE ARE ON PACE BITCHES");
       newState = PaceState.ON_PACE;
-    else if(paceDiff > 0)
+    }
+    else if(paceDiff > 0){
       newState = PaceState.OVER_PACE;
-    else
+    }
+    else {
       newState = PaceState.UNDER_PACE;
-    Log.i("voice", "Current state: " + newState.message()); 
+    }
+    //Log.i("voice", "Current state: " + newState.message()); 
     return newState;
   }
   
@@ -100,6 +107,10 @@ public class PaceControl implements PaceListener, PaceController{
   {
     String ret = "";
     PaceState current = getUpdatedState();
+    if (!previousState.equals(current)){
+      Log.i(TAG, "STATE CHANGED woo!, new state is: " + current);
+      
+    }
     if(!current.message().equals(previousState.message()))
     {
       if(current.message().equals(PaceState.OVER_PACE.message()) || current.message().equals(PaceState.UNDER_PACE.message()))
@@ -109,7 +120,7 @@ public class PaceControl implements PaceListener, PaceController{
       ret = current.message();
     }
     else if((current.message().equals(PaceState.OVER_PACE.message()) || current.message().equals(PaceState.UNDER_PACE.message())) && 
-        (System.currentTimeMillis()-5000 > lastRepeat))
+        (System.currentTimeMillis()- (warningPeriod * 1000)  > lastRepeat))
     {
       lastRepeat = System.currentTimeMillis();
       ret = current.message();
@@ -119,20 +130,6 @@ public class PaceControl implements PaceListener, PaceController{
     previousState = current;
     
     return ret;
-  }
-  
-  private PaceState getState(){
-    sendPaceAlert(paceDiff); // DEBUG remove
-    return previousState;
-  }
-  
-  private void sendPaceAlert(double paceDiff){
-    Log.i(TAG, "PACE ALERT!");
-    if (paceDiff > 0){
-      Log.i(TAG, "SLOW DOWN");
-    } else {
-      Log.i(TAG, "SPEED UP");
-    }
   }
   
   @Override
@@ -168,7 +165,8 @@ public class PaceControl implements PaceListener, PaceController{
   @Override
   public void setWarningThreshhold(int deviation) {
     // deviation is a integer percentage value, e.g. 10 = we can deviate by 0.9
-    this.deviation = (100-deviation)/100; 
+    this.deviation = (double)deviation/100;
+    Log.i(TAG, "Got a deviation input of " + deviation + ", setting this.dev to " + this.deviation );
     
   }
 
