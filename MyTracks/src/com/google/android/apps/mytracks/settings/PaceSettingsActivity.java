@@ -59,8 +59,8 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
     for (int i = 0; i < values.length; i++) {
       int val = Integer.parseInt(values[i]);
-      options[i] = val + "%"; // XXX bug with r.string.value_integer_percent
-      summary[i] = val + "%"; // XXX bug with r.string.value_integer_percent
+      options[i] = val + getString(R.string.generic_percent_written); // XXX bug with r.string.value_integer_percent
+      summary[i] = val + getString(R.string.generic_percent_written);  // XXX bug with r.string.value_integer_percent - using literal instead 
     }
     
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);

@@ -766,6 +766,10 @@ limitations under the License.
   </string>
 
   <!-- Generic -->
+  <string name="generic_percent_written"
+      translation_description="the word 'percent'">
+      Percent
+  </string>
   <string name="generic_add"
     translation_description="The text on a button to say add.">
     Add
@@ -1980,6 +1984,7 @@ limitations under the License.
       Tracks data.">
     Other apps can read, write, start/stop recording My Tracks data.
   </string>
+  
 
   <!-- Settings Stats -->
   <string name="settings_stats_coordinate"
