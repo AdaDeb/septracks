@@ -328,9 +328,9 @@ public abstract class AbstractSendToGoogleActivity extends AbstractMyTracksActiv
         return;
       } else if (sendRequest.isDriveShare()) {
 
-        final CharSequence[] share_track_radios = { "Share on Google Drive", "Share on Facebook" };
+        final CharSequence[] share_track_radios = { getString(R.string.chart_share_list_option1), getString(R.string.chart_share_list_option2) };
         Context c = this;
-        AlertDialog.Builder shareRoot = new AlertDialog.Builder(c).setTitle("Share Track")
+        AlertDialog.Builder shareRoot = new AlertDialog.Builder(c).setTitle(R.string.chart_share_list_title)
             .setSingleChoiceItems(share_track_radios, -1, new DialogInterface.OnClickListener() {
 
               @Override

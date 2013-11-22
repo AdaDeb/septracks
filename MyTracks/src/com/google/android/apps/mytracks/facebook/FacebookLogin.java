@@ -11,6 +11,7 @@ import com.google.android.maps.mytracks.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,7 @@ public class FacebookLogin extends Activity {
     POST_STATUS_UPDATE
   }
 
+  GraphUser m_user;
 
 
   @Override
@@ -59,8 +61,9 @@ public class FacebookLogin extends Activity {
             @Override
             public void onCompleted(GraphUser user, Response response) {
               if (user != null) {
+                m_user = user;
                 TextView welcome = (TextView) findViewById(R.id.facebook_login_text);
-                welcome.setText("Hello " + user.getName() + "!");
+                welcome.setText(user.getName() +" "+ getString(R.string.facebook_login_welcome));
               }
             }
           });
@@ -70,13 +73,13 @@ public class FacebookLogin extends Activity {
 
     onClickPostPhoto();
 
-//    postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
-//    postPhotoButton.setOnClickListener(new View.OnClickListener() {
-//      public void onClick(View view) {
-//        onClickPostPhoto();
-//      }
-//    });
-    
+    //    postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
+    //    postPhotoButton.setOnClickListener(new View.OnClickListener() {
+    //      public void onClick(View view) {
+    //        onClickPostPhoto();
+    //      }
+    //    });
+
   }
 
   @Override
@@ -118,11 +121,11 @@ public class FacebookLogin extends Activity {
   private void postPhoto() {
     if (hasPublishPermission()) {
       //TODO: get bitmap in other way
-      
+
       String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
       Bitmap image = BitmapFactory.decodeFile(mytracksimg);
       System.out.println("Path: " + mytracksimg);
-       
+
       //Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.com_facebook_logo);
       Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), image, new Request.Callback() {
         @Override
@@ -146,7 +149,7 @@ public class FacebookLogin extends Activity {
     if (error == null) {
       title = getString(R.string.success);
       String id = result.cast(GraphObjectWithId.class).getId();
-      alertMessage = getString(R.string.successfully_posted_post, message, id);
+      alertMessage = getString(R.string.successfully_posted_post, message, id, m_user.getName());
     } else {
       title = getString(R.string.error);
       alertMessage = error.getErrorMessage();
@@ -155,8 +158,15 @@ public class FacebookLogin extends Activity {
     new AlertDialog.Builder(this)
     .setTitle(title)
     .setMessage(alertMessage)
-    .setPositiveButton(R.string.ok, null)
+    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        finish();
+      }
+    })
     .show();
+
+
+
   }
 
   @SuppressWarnings("incomplete-switch")
