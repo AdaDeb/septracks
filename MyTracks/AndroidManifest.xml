@@ -307,7 +307,8 @@ limitations under the License.
 
         <activity
             android:name="com.google.android.apps.mytracks.facebook.FacebookLogin"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_facebook_login" >
         </activity>
         <activity

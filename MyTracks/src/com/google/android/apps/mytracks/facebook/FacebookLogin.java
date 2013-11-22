@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -38,11 +39,12 @@ public class FacebookLogin extends Activity {
   }
 
   GraphUser m_user;
-
-
+  
+  private boolean firstRun = true;
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if(firstRun) {
     setContentView(R.layout.facebook_login);
 
     // start Facebook Login
@@ -80,8 +82,16 @@ public class FacebookLogin extends Activity {
     //      }
     //    });
 
+    }
   }
 
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    //setContentView(R.layout.facebook_login);
+    firstRun = false;
+  }
+  
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
