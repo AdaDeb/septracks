@@ -56,10 +56,11 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     String[] values = getResources().getStringArray(R.array.pace_keeper_threshhold_values);
     String[] options = new String[values.length];
     String[] summary = new String[values.length];
+    
     for (int i = 0; i < values.length; i++) {
       int val = Integer.parseInt(values[i]);
-      options[i] = getString(R.string.value_integer_percent, val);
-      summary[i] = getString(R.string.value_integer_percent, val);
+      options[i] = val + "%"; // XXX bug with r.string.value_integer_percent
+      summary[i] = val + "%"; // XXX bug with r.string.value_integer_percent
     }
     
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);
