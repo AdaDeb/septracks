@@ -58,7 +58,7 @@ public class FacebookLogin extends Activity {
 
           // make request to the /me API
           Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-
+            
             // callback after Graph API response with user object
             @Override
             public void onCompleted(GraphUser user, Response response) {
@@ -74,21 +74,12 @@ public class FacebookLogin extends Activity {
     });
 
     onClickPostPhoto();
-
-    //    postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
-    //    postPhotoButton.setOnClickListener(new View.OnClickListener() {
-    //      public void onClick(View view) {
-    //        onClickPostPhoto();
-    //      }
-    //    });
-
     }
   }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
-    //setContentView(R.layout.facebook_login);
     firstRun = false;
   }
   
@@ -131,7 +122,7 @@ public class FacebookLogin extends Activity {
   private void postPhoto() {
     if (hasPublishPermission()) {
       //TODO: get bitmap in other way
-
+      // load picture of chart from storage
       String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
       Bitmap image = BitmapFactory.decodeFile(mytracksimg);
       System.out.println("Path: " + mytracksimg);
@@ -165,7 +156,7 @@ public class FacebookLogin extends Activity {
       alertMessage = error.getErrorMessage();
     }
 
-    new AlertDialog.Builder(this)
+    AlertDialog facebook = new AlertDialog.Builder(this)
     .setTitle(title)
     .setMessage(alertMessage)
     .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -174,6 +165,7 @@ public class FacebookLogin extends Activity {
       }
     })
     .show();
+    facebook.setCanceledOnTouchOutside(false);
 
 
 

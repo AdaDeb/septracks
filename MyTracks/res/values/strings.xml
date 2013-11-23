@@ -1455,5 +1455,6 @@ limitations under the License.
     <string name="chart_share_list_option2">Share track chart on Facebook</string>
     <string name="chart_share_list_title">Share to social channels</string>
     <string name="facebook_login_welcome"> logged in!" \n   Posting photo..</string>
-
+    <string name="facebook_not_logged_in"> Not logged in!</string>
+    
 </resources>
