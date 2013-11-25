@@ -240,6 +240,7 @@ limitations under the License.
         <activity android:name="com.google.android.apps.mytracks.settings.SettingsActivity" />
         <activity android:name="com.google.android.apps.mytracks.settings.SharingSettingsActivity" />
         <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
+        <activity android:name="com.google.android.apps.mytracks.settings.PaceSettingsActivity" />
         <activity
             android:name="com.google.android.apps.mytracks.widgets.TrackWidgetConfigActivity"
             android:label="@string/track_widget_config_title" >
