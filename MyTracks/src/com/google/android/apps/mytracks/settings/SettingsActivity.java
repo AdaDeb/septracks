@@ -17,8 +17,8 @@
 package com.google.android.apps.mytracks.settings;
 
 import com.google.android.apps.mytracks.util.IntentUtils;
-import com.google.android.maps.mytracks.R;
 
+import android.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -47,7 +47,7 @@ public class SettingsActivity extends AbstractSettingsActivity {
     configPreference(R.string.settings_sensor_key, SensorSettingsActivity.class);
     configPreference(R.string.settings_backup_reset_key, BackupResetSettingsActivity.class);
     configPreference(R.string.settings_block_call_key, CallBlockerSettingsActivity.class);
-//    configPreference(R.string.settings_backup_reset_key, CallBlockerSettingsActivity.class);
+    configPreference(R.string.settings_target_pace_system_key, PaceSettingsActivity.class);
   }
 
   /**

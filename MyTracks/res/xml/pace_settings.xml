@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:title="@string/settings_target_pace_system_title">
+	<CheckBoxPreference
+	    android:title="@string/settings_pace_system_toggle_title"
+	    android:key="@string/settings_use_pace_system_key"
+	    android:defaultValue="false"
+	    android:summaryOn="@string/settings_pace_system_active_summary"
+	    android:summaryOff="@string/settings_pace_system_inactive_summary" />
+	<EditTextPreference
+	    android:key="@string/settings_target_pace_key" 
+	    android:title="@string/settings_target_pace_title"
+	    android:imeOptions="actionDone"
+	    android:inputType="numberDecimal" 
+	    android:defaultValue="1"
+	    android:dependency="@string/settings_use_pace_system_key" />
+	<com.google.android.apps.mytracks.IntegerListPreference
+	    android:defaultValue="5"
+	  	android:key="@string/settings_target_pace_reminder_frequency_key"
+	  	android:title="@string/settings_target_pace_reminder_frequency_title"
+	  	android:dependency="@string/settings_use_pace_system_key" />
+	<com.google.android.apps.mytracks.IntegerListPreference
+	    android:defaultValue="10"
+	    android:key="@string/settings_target_pace_threshhold_key"
+	    android:title="@string/settings_target_pace_threshhold_title"
+	  	android:dependency="@string/settings_use_pace_system_key" />
+</PreferenceScreen>

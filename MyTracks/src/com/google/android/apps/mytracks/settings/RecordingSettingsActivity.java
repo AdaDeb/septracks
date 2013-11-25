@@ -40,6 +40,8 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
 
     boolean metricUnits = PreferencesUtils.isMetricUnits(this);
 
+
+    
     configFrequencyPreference(R.string.voice_frequency_key,
         PreferencesUtils.VOICE_FREQUENCY_DEFAULT, R.array.frequency_values, metricUnits);
     configFrequencyPreference(R.string.split_frequency_key,
@@ -61,6 +63,8 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
     configListPreference(R.string.auto_resume_track_timeout_key,
         PreferencesUtils.AUTO_RESUME_TRACK_TIMEOUT_DEFAULT,
         R.array.auto_resume_track_timeout_values, metricUnits);
+    
+    
   }
 
   @SuppressWarnings("deprecation")
@@ -132,7 +136,7 @@ public class RecordingSettingsActivity extends AbstractSettingsActivity {
     }
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);
   }
-
+  
   /**
    * Sets the min recording interval summary and options.
    * 

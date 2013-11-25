@@ -32,6 +32,7 @@ import com.google.android.apps.mytracks.content.WaypointCreationRequest;
 import com.google.android.apps.mytracks.services.sensors.SensorManager;
 import com.google.android.apps.mytracks.services.sensors.SensorManagerFactory;
 import com.google.android.apps.mytracks.services.tasks.AnnouncementPeriodicTaskFactory;
+import com.google.android.apps.mytracks.services.tasks.PacePeriodicTaskFactory;
 import com.google.android.apps.mytracks.services.tasks.PeriodicTaskExecutor;
 import com.google.android.apps.mytracks.services.tasks.SplitPeriodicTaskFactory;
 import com.google.android.apps.mytracks.stats.TripStatistics;
@@ -75,6 +76,9 @@ import android.util.Log;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import pacer.PaceController;
+import pacer.PaceFactory;
+
 /**
  * A background service that registers a location listener and records track
  * points. Track points are saved to the {@link MyTracksProvider}.
@@ -101,6 +105,7 @@ public class TrackRecordingService extends Service {
   private static final String TAG = TrackRecordingService.class.getSimpleName();
   private static final long ONE_SECOND = 1000; // in milliseconds
   private static final long ONE_MINUTE = 60 * ONE_SECOND; // in milliseconds
+  private static final int MILLSECONDS_TO_MINUTE = 60000; //SEP-6 converts milliseconds to minutes
   
   @VisibleForTesting
   static final int MAX_AUTO_RESUME_TRACK_RETRY_ATTEMPTS = 3;
@@ -115,6 +120,7 @@ public class TrackRecordingService extends Service {
   private ActivityRecognitionClient activityRecognitionClient;
   private PeriodicTaskExecutor voiceExecutor;
   private PeriodicTaskExecutor splitExecutor;
+  private PeriodicTaskExecutor paceExecutor;
   private SharedPreferences sharedPreferences;
   private long recordingTrackId;
   private boolean recordingTrackPaused;
@@ -133,6 +139,7 @@ public class TrackRecordingService extends Service {
   private Location lastLocation;
   private boolean currentSegmentHasLocation;
   private boolean isIdle; // true if idle
+  private PaceController paceController; 
 
   private ServiceBinder binder = new ServiceBinder(this);
 
@@ -167,14 +174,16 @@ public class TrackRecordingService extends Service {
             voiceExecutor.setMetricUnits(metricUnits);
             splitExecutor.setMetricUnits(metricUnits);
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.voice_frequency_key))) {
-            voiceExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            voiceExecutor.setTaskFrequency(MILLSECONDS_TO_MINUTE*PreferencesUtils.getInt(
                 context, R.string.voice_frequency_key, PreferencesUtils.VOICE_FREQUENCY_DEFAULT));
           }
+          //SEP-6 The input have been changed from minutes to milliseconds and therefore added 60 000 to VOICE_FREQUENCY_DEFAULT      
           if (key == null
               || key.equals(PreferencesUtils.getKey(context, R.string.split_frequency_key))) {
-            splitExecutor.setTaskFrequency(PreferencesUtils.getInt(
+            splitExecutor.setTaskFrequency(MILLSECONDS_TO_MINUTE*PreferencesUtils.getInt(
                 context, R.string.split_frequency_key, PreferencesUtils.SPLIT_FREQUENCY_DEFAULT));
           }
           if (key == null || key.equals(
@@ -222,8 +231,35 @@ public class TrackRecordingService extends Service {
                 R.string.auto_resume_track_timeout_key,
                 PreferencesUtils.AUTO_RESUME_TRACK_TIMEOUT_DEFAULT);
           }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_target_pace_key))) {
+            paceController.setTargetPace(Double.parseDouble((PreferencesUtils.getString(context,
+                R.string.settings_target_pace_key,
+                PreferencesUtils.PACE_KEEPER_PACE_DEFAULT))));
+          }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_target_pace_reminder_frequency_key))) {
+            paceController.setWarningPeriod(PreferencesUtils.getInt(context,
+                R.string.settings_target_pace_reminder_frequency_key,
+                PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT));
+          }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_use_pace_system_key))){
+            boolean usePace = PreferencesUtils.getBoolean(context, 
+                R.string.settings_use_pace_system_key, 
+                PreferencesUtils.PACE_KEEPER_USE_PACE_SYSTEM_DEFAULT);
+            paceExecutor.setTaskFrequency(usePace ? 500 : 0);
+          }
+          if (key == null || key.equals(
+              PreferencesUtils.getKey(context, R.string.settings_target_pace_threshhold_key))) {
+            paceController.setWarningThreshhold(PreferencesUtils.getInt(context,
+                R.string.settings_target_pace_threshhold_key,
+                PreferencesUtils.PACE_KEEPER_PACE_THRESHHOLD_DEFAULT));
+          }
+            
         }
       };
+
 
   private LocationListener locationListener = new LocationListener() {
       @Override
@@ -290,7 +326,13 @@ public class TrackRecordingService extends Service {
         PendingIntent.FLAG_UPDATE_CURRENT);
     activityRecognitionClient = new ActivityRecognitionClient(
         context, activityRecognitionCallbacks, activityRecognitionFailedListener);
-    activityRecognitionClient.connect();    
+    activityRecognitionClient.connect();  
+    
+    paceController = PaceFactory.getPaceController();
+    
+    paceExecutor = new PeriodicTaskExecutor(this, new PacePeriodicTaskFactory());
+    //SEP-6 Set paceExecutor to check status of the current pace twice every second(i.e. 500 ms)
+    paceExecutor.setTaskFrequency(500);  // TODO externalize 
     voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
     splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -367,6 +409,12 @@ public class TrackRecordingService extends Service {
     sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
     try {
+      paceExecutor.shutdown();
+    } finally {
+      paceExecutor = null;
+    }
+    
+    try {
       splitExecutor.shutdown();
     } finally {
       splitExecutor = null;
@@ -424,6 +472,13 @@ public class TrackRecordingService extends Service {
       return null;
     }
     return trackTripStatisticsUpdater.getTripStatistics();
+  }
+  
+  /**
+   * Gets the pace controller.
+   */
+  public PaceController getPaceController() {
+    return paceController;
   }
 
   /**
@@ -595,6 +650,20 @@ public class TrackRecordingService extends Service {
     long now = System.currentTimeMillis();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(now);
     markerTripStatisticsUpdater = new TripStatisticsUpdater(now);
+    
+    // TODO
+    
+    double targetPace = Double.parseDouble(PreferencesUtils.getString(this, R.string.settings_target_pace_key, PreferencesUtils.PACE_KEEPER_PACE_DEFAULT));
+    int paceWarningPeriod = PreferencesUtils.getInt(this, 
+        R.string.settings_target_pace_reminder_frequency_key, PreferencesUtils.PACE_KEEPER_REMINDER_FREQUENCY_DEFAULT);
+    int deviation = PreferencesUtils.getInt(this, 
+        R.string.settings_target_pace_threshhold_key,
+        PreferencesUtils.PACE_KEEPER_PACE_THRESHHOLD_DEFAULT);
+    paceController.setTargetPace(targetPace);
+    paceController.setWarningPeriod(paceWarningPeriod);
+    paceController.setWarningThreshhold(deviation);
+    
+    trackTripStatisticsUpdater.setPaceListener(paceController.asPaceListener());
 
     // Insert a track
     Track track = new Track();
@@ -633,6 +702,12 @@ public class TrackRecordingService extends Service {
 
     TripStatistics tripStatistics = track.getTripStatistics();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(tripStatistics.getStartTime());
+    
+    paceController = PaceFactory.getPaceController(Double.parseDouble(
+        PreferencesUtils.getString(context,
+        R.string.settings_target_pace_key,
+        PreferencesUtils.PACE_KEEPER_PACE_DEFAULT)));
+    trackTripStatisticsUpdater.setPaceListener(paceController.asPaceListener());
 
     long markerStartTime;
     Waypoint waypoint = myTracksProviderUtils.getLastWaypoint(
@@ -719,6 +794,7 @@ public class TrackRecordingService extends Service {
     // Restore periodic tasks
     voiceExecutor.restore();
     splitExecutor.restore();
+    paceExecutor.restore();
   }
 
   /**
@@ -819,13 +895,16 @@ public class TrackRecordingService extends Service {
     // Shutdown periodic tasks
     voiceExecutor.shutdown();
     splitExecutor.shutdown();
+    paceExecutor.shutdown();
 
+    
     // Update instance variables
     if (sensorManager != null) {
       SensorManagerFactory.releaseSystemSensorManager();
       sensorManager = null;
     }
     lastLocation = null;
+    paceController = null;
 
     sendTrackBroadcast(trackStopped ? R.string.track_stopped_broadcast_action
         : R.string.track_paused_broadcast_action, trackId);
@@ -1010,6 +1089,7 @@ public class TrackRecordingService extends Service {
     }
     voiceExecutor.update();
     splitExecutor.update();
+    paceExecutor.update();
     sendTrackBroadcast(R.string.track_update_broadcast_action, track.getId());
   }
 

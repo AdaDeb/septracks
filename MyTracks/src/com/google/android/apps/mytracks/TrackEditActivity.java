@@ -231,7 +231,7 @@ public class TrackEditActivity extends AbstractMyTracksActivity
       }
       setTitle(R.string.track_edit_new_track_title);
 
-      // User story id: 60161552
+      // User story id: SEP-1
       // If it is a new track, the cancel button will be used for discarding a track.
       cancel.setText(R.string.generic_discard_track);
       cancel.setOnClickListener(new View.OnClickListener() {

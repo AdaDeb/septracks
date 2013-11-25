@@ -93,5 +93,9 @@ limitations under the License.
   <string name="settings_sharing_key">settingsSharing</string>
   <string name="settings_stats_key">settingsStats</string>
   <string name="settings_chart_x_axis_key">settingsChartXaxis</string>
-  
+  <string name="settings_use_pace_system_key">settingsUsePaceSystem</string>
+  <string name="settings_target_pace_key">settingsTargetPace</string>
+  <string name="settings_target_pace_reminder_frequency_key">settingsTargetPaceReminderFrequency</string>
+  <string name="settings_target_pace_system_key">settingsTargetPaceSystem</string>
+  <string name="settings_target_pace_threshhold_key">settingTargetPaceTreshhold</string>
 </resources>

@@ -473,6 +473,34 @@ public class SettingTest extends ActivityInstrumentationTestCase2<TrackListActiv
     assertEquals(isSyncChecked,
         EndToEndTestUtils.findMenuItem(activityMyTracks.getString(R.string.menu_refresh), false));
   }
+  
+  public void testTargetPaceModelToViewConversion(){
+    String paceValInput = "6";
+    
+    EndToEndTestUtils.findMenuItem(
+        activityMyTracks.getString(R.string.menu_settings), true);
+    EndToEndTestUtils.SOLO.clickOnText(
+        activityMyTracks.getString(R.string.settings_target_pace_system_title));
+    EndToEndTestUtils.SOLO.clickOnText(
+        activityMyTracks.getString(R.string.settings_target_pace_title));
+
+    // Changes the target pace; 6 km
+    
+    EndToEndTestUtils.enterTextAvoidSoftKeyBoard(0, paceValInput);
+    EndToEndTestUtils
+    .getButtonOnScreen(activityMyTracks.getString(R.string.generic_ok), true, true);
+    
+    double paceValResult = Double.parseDouble(PreferencesUtils.getString(
+        activityMyTracks, R.string.settings_target_pace_key, "0")); 
+    double expectedValue = 10/3.6;
+    
+    Log.d("SettingsTest", "Value entered is: " +paceValInput);
+    Log.d("SettingsTest", "Expected value is: " + 2);
+    Log.d("SettingsTest", "Value stored is: " + paceValResult);
+    
+    assert Math.abs(paceValResult - expectedValue) > 0.02;
+
+  }
 
   @Override
   protected void tearDown() throws Exception {

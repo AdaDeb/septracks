@@ -52,4 +52,8 @@ limitations under the License.
     android:key="@string/settings_block_call_key"
     android:persistent="false"
     android:title="@string/settings_block_call_key" />
+  <Preference
+     android:key="@string/settings_target_pace_system_key"
+     android:persistent="false"
+     android:title="@string/settings_target_pace_system_title" />
 </PreferenceScreen>
