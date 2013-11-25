@@ -17,8 +17,8 @@
 package com.google.android.apps.mytracks.settings;
 
 import com.google.android.apps.mytracks.util.IntentUtils;
+import com.google.android.maps.mytracks.R;
 
-import android.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
