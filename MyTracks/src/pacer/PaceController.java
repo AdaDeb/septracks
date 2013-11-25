@@ -17,12 +17,24 @@ public interface PaceController {
   
   public int getWarningPeriod();
     
+  /**
+   * Sets how frequently in ms a user should be warned once outside target pace
+   * @param period how many ms between each message
+   */
   public void setWarningPeriod(int period);
 
+  /**
+   * Sets the target pace in m/s
+   * @param pace the target pace in m/s
+   */
   public void setTargetPace(double pace);
   
   public String getPaceMessage();
   
+  /**
+   * Sets how close to the target pace the user must remain to not be warned
+   * @param deviation an integer value in percentage - 10 means must keep within 10% of speed
+   */
   public void setWarningThreshhold(int deviation);
   
   /**

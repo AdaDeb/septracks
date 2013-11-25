@@ -13,6 +13,8 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
 
+import java.text.DecimalFormat;
+
 public class PaceSettingsActivity extends AbstractSettingsActivity {
   private static final String TAG = PaceSettingsActivity.class.getSimpleName();
   private EditTextPreference targetPacePreference;
@@ -59,8 +61,9 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     
     for (int i = 0; i < values.length; i++) {
       int val = Integer.parseInt(values[i]);
-      options[i] = val + " " + getString(R.string.generic_percent_written); // XXX bug with r.string.value_integer_percent
-      summary[i] = val + " " + getString(R.string.generic_percent_written);  // XXX bug with r.string.value_integer_percent - using literal instead 
+   // XXX bug with r.string.value_integer_percent
+      options[i] = val + " " + getString(R.string.generic_percent_written); 
+      summary[i] = val + " " + getString(R.string.generic_percent_written);  
     }
     
     configureListPreference(preference, summary, options, values, String.valueOf(value), null);
@@ -100,9 +103,15 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
         String val = PreferencesUtils.getString(
             PaceSettingsActivity.this, R.string.settings_target_pace_key, 
             PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
-        double formattedSpeed = meterPerSecondToMinutesPerDistance(Double.parseDouble(val)); 
+        double formattedSpeed = formatSpeedForDisplay(
+            meterPerSecondToMinutesPerDistance(Double.parseDouble(val)));
         ((EditTextPreference)preference).getEditText().setText(""+formattedSpeed);
         return true;
+      }
+
+      private double formatSpeedForDisplay(double floatingSpeed) {
+        DecimalFormat roundToTwo = new DecimalFormat("#.##");
+        return Double.valueOf(roundToTwo.format(floatingSpeed));
       }
     });
   }
