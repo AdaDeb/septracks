@@ -112,7 +112,7 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
       }
 
       private String formatSpeedForDisplay(double floatingSpeed) {
-        return roundToTwo.format(floatingSpeed);
+        return roundToTwo.format(floatingSpeed).replace(',', '.');
       }
     });
   }
