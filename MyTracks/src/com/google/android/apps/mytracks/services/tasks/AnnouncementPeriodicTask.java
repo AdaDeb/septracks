@@ -72,14 +72,14 @@ public class AnnouncementPeriodicTask implements PeriodicTask {
   private final Context context;
   private TextToSpeech tts;
 
-  // Response from TTS after its initialization
-  private int initStatus = TextToSpeech.ERROR;
+  // Response from TTS after its initialization, This was changed from private to protected SEP-6
+  protected int initStatus = TextToSpeech.ERROR;
 
-  // True if TTS engine is ready
-  private boolean ready = false;
+  // True if TTS engine is ready. This was changed from private to protected SEP-6
+  protected boolean ready = false;
 
-  // True if speech is allowed
-  private boolean speechAllowed;
+  // True if speech is allowed. This was changed from private to protected SEP-6
+  protected boolean speechAllowed;
 
   private final AudioManager audioManager;
 
@@ -124,6 +124,7 @@ public class AnnouncementPeriodicTask implements PeriodicTask {
     }
     announce(trackRecordingService.getTripStatistics());
   }
+  
 
   /**
    * Runs this task.
@@ -169,7 +170,8 @@ public class AnnouncementPeriodicTask implements PeriodicTask {
   /**
    * Called when TTS is ready.
    */
-  private void onTtsReady() {
+  //This method was changed from private to protected SEP-6
+  protected void onTtsReady() {
     Locale locale = Locale.getDefault();
     int languageAvailability = tts.isLanguageAvailable(locale);
     if (languageAvailability == TextToSpeech.LANG_MISSING_DATA
@@ -195,7 +197,8 @@ public class AnnouncementPeriodicTask implements PeriodicTask {
    * 
    * @param announcement the announcement
    */
-  private void speakAnnouncement(String announcement) {
+  //This method was change from private to protected SEP-6
+  protected void speakAnnouncement(String announcement) {
     int result = audioManager.requestAudioFocus(
         null, TextToSpeech.Engine.DEFAULT_STREAM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
     if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
