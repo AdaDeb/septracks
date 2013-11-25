@@ -8,28 +8,26 @@ import android.util.Log;
 
 import pacer.PaceController;
 
+/**
+ * SEP-6
+ * A task for announcing the status of the pace via voice messages.
+ * It extends the AnnouncementPeriodicTask due to the fact that it also
+ * handles voice messages (Text-To-Speech).
+ * 
+ * @author Björn Lexell, Johan Grundén
+ *
+ */
 public class PacePeriodicTask extends AnnouncementPeriodicTask {
-
 
   private static final String TAG = PacePeriodicTask.class.getSimpleName();
   
   public PacePeriodicTask(Context context) {
     super(context);
   }
-  
+  //Used for getting the new status of the pace.
   protected String getAnnouncement(PaceController pc){
-   
-     String ret = "";
-     double state = pc.getStatus();
-     
-     if(state < 0)
-       ret = "Too slow";
-     else if(state == 0)
-       ret = "On target pace";
-     else if(state > 0) 
-       ret = "Too fast";           
-    return ret;   
-  }
+    return pc.getPaceMessage();
+  }  
   
   @Override
   public void run(TrackRecordingService trackRecordingService) {
@@ -63,7 +61,9 @@ public class PacePeriodicTask extends AnnouncementPeriodicTask {
       Log.i(TAG, "Speech is not allowed at this time.");
       return;
     }
-    speakAnnouncement(getAnnouncement(pc));
+    String toAnnounce = getAnnouncement(pc);
+    if(toAnnounce.length() > 0)
+      speakAnnouncement(toAnnounce);
   }
 
 }

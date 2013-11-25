@@ -224,11 +224,10 @@ public class TripStatisticsUpdater {
    */
   @VisibleForTesting
   void updateSpeed(long time, double speed, long lastLocationTime, double lastLocationSpeed) {
-    Log.v(TAG, "trying to update speed! speed is: " + speed + ", time is " + time); // DEBUG
+    Log.v(TAG, "trying to update speed! speed is: " + speed); // DEBUG
     if (speed < MAX_NO_MOVEMENT_SPEED) {
       speedBuffer.reset();
     } else if (isValidSpeed(time, speed, lastLocationTime, lastLocationSpeed)) {
-      Log.v(TAG, "speed is valid, here we go");
       speedBuffer.setNext(speed);
       if (paceListener != null){ // TODO figure out more elegant way
         paceListener.updateSpeed(speed);

@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -36,12 +37,17 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -129,54 +135,25 @@ public class ChartView extends View {
   public ChartView(Context context) {
     super(context);
 
-    series[ELEVATION_SERIES] = new ChartValueSeries(context,
-        Integer.MIN_VALUE,
-        Integer.MAX_VALUE,
+    series[ELEVATION_SERIES] = new ChartValueSeries(context, Integer.MIN_VALUE, Integer.MAX_VALUE,
         new int[] { 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000 },
-        R.string.description_elevation_metric,
-        R.string.description_elevation_imperial,
-        R.color.chart_elevation_fill,
-        R.color.chart_elevation_border);
-    series[SPEED_SERIES] = new ChartValueSeries(context,
-        0,
-        Integer.MAX_VALUE,
-        new int[] {1, 5, 10, 20, 50, 100 },
-        R.string.description_speed_metric,
-        R.string.description_speed_imperial,
-        R.color.chart_speed_fill,
-        R.color.chart_speed_border);
-    series[PACE_SERIES] = new ChartValueSeries(context,
-        0,
-        Integer.MAX_VALUE,
-        new int[] {1, 2, 5, 10, 15, 20, 30, 60, 120 },
-        R.string.description_pace_metric,
-        R.string.description_pace_imperial,
-        R.color.chart_pace_fill,
-        R.color.chart_pace_border);
-    series[HEART_RATE_SERIES] = new ChartValueSeries(context,
-        0,
-        Integer.MAX_VALUE,
-        new int[] {25, 50 },
-        R.string.description_sensor_heart_rate,
-        R.string.description_sensor_heart_rate,
-        R.color.chart_heart_rate_fill,
-        R.color.chart_heart_rate_border);
-    series[CADENCE_SERIES] = new ChartValueSeries(context,
-        0,
-        Integer.MAX_VALUE,
-        new int[] {5, 10, 25, 50 },
-        R.string.description_sensor_cadence,
-        R.string.description_sensor_cadence,
-        R.color.chart_cadence_fill,
-        R.color.chart_cadence_border);
-    series[POWER_SERIES] = new ChartValueSeries(context,
-        0,
-        1000,
-        new int[] { 5, 50, 100, 200 },
-        R.string.description_sensor_power,
-        R.string.description_sensor_power,
-        R.color.chart_power_fill,
-        R.color.chart_power_border);
+        R.string.description_elevation_metric, R.string.description_elevation_imperial,
+        R.color.chart_elevation_fill, R.color.chart_elevation_border);
+    series[SPEED_SERIES] = new ChartValueSeries(context, 0, Integer.MAX_VALUE, new int[] { 1, 5,
+        10, 20, 50, 100 }, R.string.description_speed_metric, R.string.description_speed_imperial,
+        R.color.chart_speed_fill, R.color.chart_speed_border);
+    series[PACE_SERIES] = new ChartValueSeries(context, 0, Integer.MAX_VALUE, new int[] { 1, 2, 5,
+        10, 15, 20, 30, 60, 120 }, R.string.description_pace_metric,
+        R.string.description_pace_imperial, R.color.chart_pace_fill, R.color.chart_pace_border);
+    series[HEART_RATE_SERIES] = new ChartValueSeries(context, 0, Integer.MAX_VALUE, new int[] { 25,
+        50 }, R.string.description_sensor_heart_rate, R.string.description_sensor_heart_rate,
+        R.color.chart_heart_rate_fill, R.color.chart_heart_rate_border);
+    series[CADENCE_SERIES] = new ChartValueSeries(context, 0, Integer.MAX_VALUE, new int[] { 5, 10,
+        25, 50 }, R.string.description_sensor_cadence, R.string.description_sensor_cadence,
+        R.color.chart_cadence_fill, R.color.chart_cadence_border);
+    series[POWER_SERIES] = new ChartValueSeries(context, 0, 1000, new int[] { 5, 50, 100, 200 },
+        R.string.description_sensor_power, R.string.description_sensor_power,
+        R.color.chart_power_fill, R.color.chart_power_border);
 
     float scale = context.getResources().getDisplayMetrics().density;
 
@@ -215,6 +192,12 @@ public class ChartView extends View {
     setFocusable(true);
     setClickable(true);
     updateDimensions();
+
+
+
+
+
+
   }
 
   /**
@@ -453,8 +436,8 @@ public class ChartView extends View {
           synchronized (waypoints) {
             for (int i = 0; i < waypoints.size(); i++) {
               Waypoint waypoint = waypoints.get(i);
-              int distance = Math.abs(
-                  getX(getWaypointXValue(waypoint)) - (int) event.getX() - getScrollX());
+              int distance = Math.abs(getX(getWaypointXValue(waypoint)) - (int) event.getX()
+                  - getScrollX());
               if (distance < minDistance) {
                 minDistance = distance;
                 nearestWaypoint = waypoint;
@@ -486,8 +469,8 @@ public class ChartView extends View {
 
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    updateEffectiveDimensionsIfChanged(
-        View.MeasureSpec.getSize(widthMeasureSpec), View.MeasureSpec.getSize(heightMeasureSpec));
+    updateEffectiveDimensionsIfChanged(View.MeasureSpec.getSize(widthMeasureSpec),
+        View.MeasureSpec.getSize(heightMeasureSpec));
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
   }
 
@@ -496,22 +479,22 @@ public class ChartView extends View {
     synchronized (chartData) {
 
       canvas.save();
-      
+
       canvas.drawColor(Color.WHITE);
 
       canvas.save();
-      
+
       clipToGraphArea(canvas);
       drawDataSeries(canvas);
       drawWaypoints(canvas);
       drawGrid(canvas);
-      
+
       canvas.restore();
 
       drawSeriesTitles(canvas);
       drawXAxis(canvas);
       drawYAxis(canvas);
-      
+
       canvas.restore();
 
       if (showPointer) {
@@ -562,10 +545,10 @@ public class ChartView extends View {
         }
         canvas.save();
         float x = getX(getWaypointXValue(waypoint));
-        canvas.drawLine(
-            x, topBorder + spacer + markerHeight / 2, x, topBorder + effectiveHeight, markerPaint);
-        canvas.translate(
-            x - (float) (markerWidth * MapOverlay.WAYPOINT_X_ANCHOR), topBorder + spacer);
+        canvas.drawLine(x, topBorder + spacer + markerHeight / 2, x, topBorder + effectiveHeight,
+            markerPaint);
+        canvas.translate(x - (float) (markerWidth * MapOverlay.WAYPOINT_X_ANCHOR), topBorder
+            + spacer);
         if (waypoints.get(i).getType() == WaypointType.STATISTICS) {
           statisticsMarker.draw(canvas);
         } else {
@@ -670,8 +653,8 @@ public class ChartView extends View {
   private String getXAxisLabel() {
     Context context = getContext();
     if (chartByDistance) {
-      return metricUnits ? context.getString(R.string.unit_kilometer)
-          : context.getString(R.string.unit_mile);
+      return metricUnits ? context.getString(R.string.unit_kilometer) : context
+          .getString(R.string.unit_mile);
     } else {
       return context.getString(R.string.description_time);
     }
@@ -685,10 +668,9 @@ public class ChartView extends View {
    * @param numberFormat the number format
    * @param spacing the spacing between x axis and marker
    */
-  private void drawXAxisMarker(
-      Canvas canvas, double value, NumberFormat numberFormat, int spacing) {
-    String marker = chartByDistance ? numberFormat.format(value)
-        : StringUtils.formatElapsedTime((long) value);
+  private void drawXAxisMarker(Canvas canvas, double value, NumberFormat numberFormat, int spacing) {
+    String marker = chartByDistance ? numberFormat.format(value) : StringUtils
+        .formatElapsedTime((long) value);
     Rect rect = getRect(xAxisMarkerPaint, marker);
     canvas.drawText(marker, getX(value), topBorder + effectiveHeight + spacing + rect.height(),
         xAxisMarkerPaint);
@@ -736,7 +718,7 @@ public class ChartView extends View {
     int x = getScrollX() + leftBorder;
     int y = topBorder;
     canvas.drawLine(x, y, x, y + effectiveHeight, axisPaint);
-    
+
     int markerXPosition = x - spacer;
     for (int i = 0; i < series.length; i++) {
       int index = series.length - 1 - i;
@@ -759,8 +741,10 @@ public class ChartView extends View {
     int interval = chartValueSeries.getInterval();
     float maxMarkerWidth = 0;
     for (int i = 0; i <= Y_AXIS_INTERVALS; i++) {
-      maxMarkerWidth = Math.max(maxMarkerWidth, drawYAxisMarker(chartValueSeries, canvas, xPosition,
-          i * interval + chartValueSeries.getMinMarkerValue()));
+      maxMarkerWidth = Math.max(
+          maxMarkerWidth,
+          drawYAxisMarker(chartValueSeries, canvas, xPosition,
+              i * interval + chartValueSeries.getMinMarkerValue()));
     }
     return maxMarkerWidth;
   }
@@ -774,8 +758,8 @@ public class ChartView extends View {
    * @param yValue the y value
    * @return the marker width.
    */
-  private float drawYAxisMarker(
-      ChartValueSeries chartValueSeries, Canvas canvas, int xPosition, int yValue) {
+  private float drawYAxisMarker(ChartValueSeries chartValueSeries, Canvas canvas, int xPosition,
+      int yValue) {
     String marker = chartValueSeries.formatMarker(yValue);
     Paint paint = chartValueSeries.getMarkerPaint();
     Rect rect = getRect(paint, marker);
@@ -826,7 +810,7 @@ public class ChartView extends View {
    */
   private void drawPaths() {
     boolean[] hasMoved = new boolean[series.length];
-    
+
     for (int i = 0; i < chartData.size(); i++) {
       double[] dataPoint = chartData.get(i);
       for (int j = 0; j < series.length; j++) {
@@ -898,7 +882,7 @@ public class ChartView extends View {
     yAxisOffset = (int) (density * Y_AXIS_OFFSET);
 
     int markerLength = 0;
-    for (int i = 0; i < series.length; i ++) {
+    for (int i = 0; i < series.length; i++) {
       ChartValueSeries chartValueSeries = series[i];
       if (chartValueSeries.isEnabled() && chartValueSeries.hasData() || allowIfEmpty(i)) {
         Rect rect = getRect(chartValueSeries.getMarkerPaint(), chartValueSeries.getLargestMarker());
@@ -911,8 +895,8 @@ public class ChartView extends View {
     topBorder = (int) (density * BORDER + titleDimensions[0] * (titleDimensions[1] + spacer));
     Rect xAxisLabelRect = getRect(axisPaint, getXAxisLabel());
     // border + x axis marker + spacer + .5 x axis label
-    bottomBorder = (int) (density * BORDER + getRect(xAxisMarkerPaint, "1").height() + spacer
-        + (int) (xAxisLabelRect.height() / 2));
+    bottomBorder = (int) (density * BORDER + getRect(xAxisMarkerPaint, "1").height() + spacer + (int) (xAxisLabelRect
+        .height() / 2));
     rightBorder = (int) (density * BORDER + xAxisLabelRect.width() + spacer);
     updateEffectiveDimensions();
   }
@@ -1012,7 +996,7 @@ public class ChartView extends View {
         return false;
     }
   }
-  
+
   /**
    * Returns the status of metricUnits.
    * 
@@ -1022,4 +1006,26 @@ public class ChartView extends View {
   public boolean isMetricUnits() {
     return metricUnits;
   }
+
+  //TODO: comment
+  public void saveChartPhoto() {
+    getRootView();
+    setDrawingCacheEnabled(true);
+    Bitmap chartBitmap = getDrawingCache();
+    String extr = Environment.getExternalStorageDirectory().toString();
+    File myPath = new File(extr, "mytracks_chart.jpg");
+    FileOutputStream file = null;
+    try {
+      file = new FileOutputStream(myPath);
+      chartBitmap.compress(Bitmap.CompressFormat.JPEG, 100, file);
+      file.flush();
+      file.close();
+      MediaStore.Images.Media.insertImage(this.getContext().getContentResolver(), chartBitmap, "Screen", "screen");
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 }

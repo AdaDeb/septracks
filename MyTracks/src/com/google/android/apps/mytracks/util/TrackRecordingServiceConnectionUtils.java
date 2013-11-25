@@ -105,9 +105,10 @@ public class TrackRecordingServiceConnectionUtils {
    * @param trackRecordingServiceConnection the track recording service
    *          connection
    * @param showEditor true to show the editor
+   * @numBlockedCalls specifies the number of calls that were blocked while recording this track
    */
   public static void stopRecording(Context context,
-      TrackRecordingServiceConnection trackRecordingServiceConnection, boolean showEditor) {
+      TrackRecordingServiceConnection trackRecordingServiceConnection, boolean showEditor, int numBlockedCalls) {
     ITrackRecordingService trackRecordingService = trackRecordingServiceConnection
         .getServiceIfBound();
     if (trackRecordingService != null) {
@@ -123,7 +124,8 @@ public class TrackRecordingServiceConnectionUtils {
           if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
             Intent intent = IntentUtils.newIntent(context, TrackEditActivity.class)
                 .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
-                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true);
+                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true)
+                .putExtra(TrackEditActivity.NUM_BLOCKED_CALLS, numBlockedCalls);
             context.startActivity(intent);
           }
         } else {
@@ -136,6 +138,11 @@ public class TrackRecordingServiceConnectionUtils {
       resetRecordingState(context);
     }
     trackRecordingServiceConnection.unbindAndStop();
+  }
+  
+  public static void stopRecording(Context context,
+      TrackRecordingServiceConnection trackRecordingServiceConnection, boolean showEditor) {
+    stopRecording(context, trackRecordingServiceConnection, showEditor, 0);
   }
 
   /**

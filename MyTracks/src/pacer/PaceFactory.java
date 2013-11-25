@@ -2,7 +2,7 @@ package pacer;
 
 public class PaceFactory {
 
-  public static PaceController getPaceController(int targetPace){
+  public static PaceController getPaceController(double targetPace){
     return new PaceControl(targetPace);
   }
 

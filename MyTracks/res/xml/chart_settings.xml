@@ -15,32 +15,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  android:title="@string/track_detail_chart_tab" >
-  <CheckBoxPreference
-    android:defaultValue="true"
-    android:key="@string/chart_by_distance_key"
-    android:summaryOff="@string/settings_chart_by_time"
-    android:summaryOn="@string/settings_chart_by_distance"
-    android:title="@string/settings_chart_x_axis" />
-  <PreferenceCategory android:title="@string/settings_show" >
-    <CheckBoxPreference
-      android:defaultValue="true"
-      android:key="@string/chart_show_elevation_key"
-      android:title="@string/stats_elevation" />
-    <CheckBoxPreference
-      android:defaultValue="true"
-      android:key="@string/chart_show_speed_key" />
-    <CheckBoxPreference
-      android:defaultValue="true"
-      android:key="@string/chart_show_heart_rate_key"
-      android:title="@string/sensor_state_heart_rate" />
-    <CheckBoxPreference
-      android:defaultValue="true"
-      android:key="@string/chart_show_cadence_key"
-      android:title="@string/sensor_state_cadence" />
-    <CheckBoxPreference
-      android:defaultValue="true"
-      android:key="@string/chart_show_power_key"
-      android:title="@string/sensor_state_power" />
-  </PreferenceCategory>
+    android:title="@string/track_detail_chart_tab" >
+
+    <PreferenceCategory android:title="X-axis" >
+        <ListPreference
+            android:defaultValue="@string/chart_settings_xaxis_default"
+            android:entries="@array/x_axis_units"
+            android:entryValues="@array/x_axis_units_value"
+            android:key="@string/settings_chart_x_axis"
+            android:summary="@string/chart_settings_xaxis_summary"
+            android:title="@string/settings_chart_x_axis" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_chart_y_axis" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/chart_show_elevation_key"
+            android:title="@string/stats_elevation" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/chart_show_speed_key" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_chart_y_axis_external" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/chart_show_heart_rate_key"
+            android:title="@string/sensor_state_heart_rate" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/chart_show_cadence_key"
+            android:title="@string/sensor_state_cadence" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/chart_show_power_key"
+            android:title="@string/sensor_state_power" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

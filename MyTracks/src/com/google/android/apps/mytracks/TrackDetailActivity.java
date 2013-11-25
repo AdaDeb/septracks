@@ -97,6 +97,8 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
   private MenuItem voiceFrequencyMenuItem;
   private MenuItem splitFrequencyMenuItem;
   private MenuItem sensorStateMenuItem;
+  
+  private CallStateListener callStateListener;
 
   private final Runnable bindChangedCallback = new Runnable() {
       @Override
@@ -175,18 +177,19 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
       AnalyticsUtils.sendPageViews(TrackDetailActivity.this, AnalyticsUtils.ACTION_STOP_RECORDING);
       updateMenuItems(false, true);
       TrackRecordingServiceConnectionUtils.stopRecording(
-          TrackDetailActivity.this, trackRecordingServiceConnection, true);
+          TrackDetailActivity.this, trackRecordingServiceConnection, true, callStateListener.getBlockednumbers().size());
     }
   };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    callStateListener = new CallStateListener(this);
     myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
     handleIntent(getIntent());
 
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
-
+ 
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(
         this, bindChangedCallback);
     trackDataHub = TrackDataHub.newInstance(this);
@@ -241,7 +244,7 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
     super.onResume();
     trackDataHub.loadTrack(trackId);
     
-    // User story id: 60161552
+    // User story id: SEP-1
     // If a newly recorded track has been discarded, this activity should be finished.
     // If the track has been deleted, the track wont exist in the database and getTrack
     // returns null.
@@ -257,6 +260,7 @@ public class TrackDetailActivity extends AbstractSendToGoogleActivity implements
   @Override
   protected void onPause() {
     super.onPause();
+    callStateListener.setListening(false);
     trackController.onPause();
   }
 

@@ -70,6 +70,7 @@ public class TimerTaskExecutor {
     };
     timer = new Timer(TimerTaskExecutor.class.getSimpleName());
     long next = System.currentTimeMillis() + interval - (tripStatistics.getTotalTime() % interval);
+     
     timer.scheduleAtFixedRate(timerTask, new Date(next), interval);
   }
 

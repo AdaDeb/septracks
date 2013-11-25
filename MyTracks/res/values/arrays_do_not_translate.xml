@@ -264,11 +264,30 @@ limitations under the License.
     <item>@string/waypoint_type_water_fountain</item>
     <item>@string/waypoint_type_waypoint</item>
   </string-array>
-  <string-array name="pace_keeper_pace_values">
-      <item >-1</item>
+  <string-array name="pace_keeper_frequency_values">
       <item >1</item>
-      <item >2</item>
-      <item >3</item>
+      <item >5</item>
+      <item >10</item>
+      <item >20</item>
+      <item >30</item>
+  </string-array>
+  <string-array name="pace_keeper_threshhold_values">
+      <item >1</item>
+      <item >10</item>
+      <item >20</item>
+      <item >30</item>
+      <item >99</item>
+      <item >100</item>
   </string-array>
 
+   <string-array name="x_axis_units">
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
+    </string-array>
+    
+    <string-array name="x_axis_units_value">
+        <item name="Time">Time</item>
+        <item name="Distance">Distance</item>
+    </string-array>
+  
 </resources>
