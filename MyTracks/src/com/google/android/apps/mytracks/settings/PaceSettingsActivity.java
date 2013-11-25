@@ -98,20 +98,21 @@ public class PaceSettingsActivity extends AbstractSettingsActivity {
     });
     preference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
       
+      private final DecimalFormat roundToTwo = new DecimalFormat("#.##");
+      
       @Override
       public boolean onPreferenceClick(Preference preference) {
         String val = PreferencesUtils.getString(
             PaceSettingsActivity.this, R.string.settings_target_pace_key, 
             PreferencesUtils.PACE_KEEPER_PACE_DEFAULT);
-        double formattedSpeed = formatSpeedForDisplay(
+        String formattedSpeed = formatSpeedForDisplay(
             meterPerSecondToMinutesPerDistance(Double.parseDouble(val)));
-        ((EditTextPreference)preference).getEditText().setText(""+formattedSpeed);
+        ((EditTextPreference)preference).getEditText().setText(formattedSpeed);
         return true;
       }
 
-      private double formatSpeedForDisplay(double floatingSpeed) {
-        DecimalFormat roundToTwo = new DecimalFormat("#.##");
-        return Double.valueOf(roundToTwo.format(floatingSpeed));
+      private String formatSpeedForDisplay(double floatingSpeed) {
+        return roundToTwo.format(floatingSpeed);
       }
     });
   }
