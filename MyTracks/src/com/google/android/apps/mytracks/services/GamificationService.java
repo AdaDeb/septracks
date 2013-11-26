@@ -44,7 +44,8 @@ public class GamificationService extends Service {
   @Override
   public void onCreate() {
     IntentFilter filter = new IntentFilter();
-    filter.addAction(getString(R.string.track_stopped_broadcast_action));
+    filter.addAction(getString(R.string.track_stopped_and_saved_broadcast_action));
+    filter.addAction(getString(R.string.track_deleted_broadcast_action));
     registerReceiver(receiver, filter);
   }
 
@@ -57,33 +58,36 @@ public class GamificationService extends Service {
   private final BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      try {
-        List<GamificationAchievement> achievements = new ArrayList<GamificationAchievement>();
-        InputStream raw = context.getAssets().open("gamification.xml");
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document d = builder.parse(raw);
-        NodeList nodeList = d.getElementsByTagName("Challenge");
-        
-        for (int i = 0; i < nodeList.getLength(); i++) {
-          achievements.add(new GamificationAchievement(nodeList.item(i)));
-        }
-        
-        for(GamificationAchievement a : achievements){
-          if(isPassedAchievement(a)){
-            sendAsNotification(a);
-            setChallengeCompleted(a.getId());
+        try {
+          List<GamificationAchievement> achievements = new ArrayList<GamificationAchievement>();
+          InputStream raw = context.getAssets().open("gamification.xml");
+          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+          DocumentBuilder builder = factory.newDocumentBuilder();
+          Document d = builder.parse(raw);
+          NodeList nodeList = d.getElementsByTagName("Challenge");
+          
+          for (int i = 0; i < nodeList.getLength(); i++) {
+            achievements.add(new GamificationAchievement(nodeList.item(i)));
           }
+          
+          for(GamificationAchievement a : achievements){
+            if(isPassedAchievement(a)){
+              sendAsNotification(a);
+              setChallengeCompleted(a.getId());
+            }
+            else{
+              setChallengeNotCompleted(a.getId());
+            }
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
         }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
     }
   };
   
   private void sendAsNotification(GamificationAchievement a){
     NotificationCompat.Builder builder = new NotificationCompat.Builder(
-        GamificationService.this).setSmallIcon(R.drawable.trollface)
+        GamificationService.this).setSmallIcon(R.drawable.troll)
         .setContentTitle("Achievement").setContentText(a.getMessage());
     Intent targetIntent = new Intent(GamificationService.this, GamificationActivity.class);
     PendingIntent contentIntent = PendingIntent.getActivity(GamificationService.this, 0, targetIntent,
@@ -145,4 +149,9 @@ private void setChallengeCompleted(int id){
     SharedPreferences sp = this.getApplicationContext().getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_APPEND);
     sp.edit().putBoolean("completed-" + id, true).commit();
   }
+
+private void setChallengeNotCompleted(int id){
+  SharedPreferences sp = this.getApplicationContext().getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_APPEND);
+  sp.edit().putBoolean("completed-" + id, false).commit();
+}
 }

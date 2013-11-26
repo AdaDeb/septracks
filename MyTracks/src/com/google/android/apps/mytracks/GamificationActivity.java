@@ -4,13 +4,13 @@ import com.google.android.maps.mytracks.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +29,20 @@ public class GamificationActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.setContentView(R.layout.gamificationview);
+
     readInAchievements();
+  }
+
+  @Override
+  protected void onResume(){
+    super.onResume();
+    updateCompletedAchievements();
+  }
+  
+  private void updateCompletedAchievements(){
+//  Updating completed achievements
+    Intent intent = new Intent().setAction(getString(R.string.track_deleted_broadcast_action)).putExtra(getString(R.string.track_id_broadcast_extra), 0);
+    sendBroadcast(intent, getString(R.string.permission_notification_value));
   }
 
   private void readInAchievements() {
@@ -60,23 +73,23 @@ public class GamificationActivity extends Activity {
     LinearLayout l = new LinearLayout(this);
     l.setGravity(Gravity.CENTER);
    
-    TextView t = new TextView(this);
-    t.setText(a.getTitle());
-    t.setTextSize(15f);
+//    TextView t = new TextView(this);
+//    t.setText(a.getTitle());
+//    t.setTextSize(22f);
     
-//    CheckBox c = new CheckBox(this);
-//    c.setEnabled(false);
-//    c.setText(a.getTitle());
-    
-    l.addView(t);
-//    l.addView(c);
+    final CheckBox c = new CheckBox(this);
+    c.setClickable(false);
+    c.setText(a.getTitle());
+    c.setTextSize(20);
+    l.addView(c);
     
     SharedPreferences sp = this.getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
-    if(sp.getBoolean("completed-" + a.getId(), false)){    
-      l.setBackgroundColor(Color.GREEN);
+    if(sp.getBoolean("completed-" + a.getId(), false)){ 
+      c.setSelected(true);
+      c.setChecked(true);
     }
     else{
-      l.setBackgroundColor(Color.RED);
+      c.setSelected(false);
     }
     
     return l;

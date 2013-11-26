@@ -3067,5 +3067,7 @@ limitations under the License.
     <string name="gamification_criterion_totaltrips">totalTrips</string>
     <string name="gamification_criterion_completed">completed</string>
     <string name="gamification_criterion_title">title</string>
+    <string name="track_stopped_and_saved_broadcast_action">trackStoppedAndSaved</string>
+    <string name="track_deleted_broadcast_action">trackDeleted</string>
     
 </resources>
