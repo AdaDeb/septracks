@@ -15,7 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  android:title="@string/call_block_settings_title" >
+  android:title="@string/settings_block_call_key"
+   >
     <CheckBoxPreference
       android:defaultValue="true"
       android:key="@string/block_call_option_key"
