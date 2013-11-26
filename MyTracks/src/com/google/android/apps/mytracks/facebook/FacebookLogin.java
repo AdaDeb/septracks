@@ -17,19 +17,13 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class FacebookLogin extends Activity {
 
   private static final String PERMISSION = "publish_actions";
 
-
-  //private Button postStatusUpdateButton;
-  private Button postPhotoButton;
-
   private PendingAction pendingAction = PendingAction.NONE;
-
 
   private enum PendingAction {
     NONE,
@@ -38,12 +32,10 @@ public class FacebookLogin extends Activity {
   }
 
   GraphUser m_user;
-  
-  private boolean firstRun = true;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if(firstRun) {
     setContentView(R.layout.facebook_login);
 
     // start Facebook Login
@@ -56,7 +48,7 @@ public class FacebookLogin extends Activity {
         if (session.isOpened()) {
           // make request to the /me API
           Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-            
+
             // callback after Graph API response with user object
             @Override
             public void onCompleted(GraphUser user, Response response) {
@@ -64,23 +56,20 @@ public class FacebookLogin extends Activity {
                 m_user = user;
                 TextView welcome = (TextView) findViewById(R.id.facebook_login_text);
                 welcome.setText(user.getName() +" "+ getString(R.string.facebook_login_welcome));
+                onClickPostPhoto();
               }
             }
           });
         }
       }
     });    
-  onClickPostPhoto();
-    }
-    
   }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
-   // firstRun = false;
   }
-  
+
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -117,13 +106,15 @@ public class FacebookLogin extends Activity {
     performPublish(PendingAction.POST_PHOTO, false);
   }
 
+  //post photo to facebook
+  //get photo from chartFragments
   private void postPhoto() {
     if (hasPublishPermission()) {
       // load picture of chart from storage
       Bitmap image = ChartFragment.chartView.saveChartPhoto();
       // String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
       // Bitmap image = BitmapFactory.decodeFile(mytracksimg);
-      
+
       Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), image, new Request.Callback() {
         @Override
         public void onCompleted(Response response) {
@@ -162,8 +153,6 @@ public class FacebookLogin extends Activity {
     })
     .show();
     facebook.setCanceledOnTouchOutside(false);
-
-
 
   }
 
