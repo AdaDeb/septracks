@@ -3143,4 +3143,16 @@ limitations under the License.
     <string name="chart_share_list_title">Share to social channels</string>
     <string name="facebook_login_welcome"> logged in!" \n   Posting photo..</string>
     <string name="facebook_not_logged_in"> Not logged in!</string>
+
+    <string name="gamification_title">Gamification</string>
+    <string name="gamification_criterion_id">id</string>
+    <string name="gamification_criterion_lengthlasttrack">lengthLastTrack</string>
+    <string name="gamification_criterion_message">message</string>
+    <string name="gamification_criterion_lengthtotal">lengthTotal</string>
+    <string name="gamification_criterion_totaltrips">totalTrips</string>
+    <string name="gamification_criterion_completed">completed</string>
+    <string name="gamification_criterion_title">title</string>
+    <string name="track_stopped_and_saved_broadcast_action">trackStoppedAndSaved</string>
+    <string name="track_deleted_broadcast_action">trackDeleted</string>
+   
 </resources>

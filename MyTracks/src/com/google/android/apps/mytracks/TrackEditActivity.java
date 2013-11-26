@@ -217,6 +217,10 @@ public class TrackEditActivity extends AbstractMyTracksActivity
         track.setModifiedTime(System.currentTimeMillis());
         myTracksProviderUtils.updateTrack(track);
         finish();
+        
+//      Broadcasting that a track was "saved"
+        Intent intent = new Intent().setAction(getString(R.string.track_stopped_and_saved_broadcast_action)).putExtra(getString(R.string.track_id_broadcast_extra), trackId);
+        sendBroadcast(intent, getString(R.string.permission_notification_value));
       }
     });
 
@@ -239,6 +243,10 @@ public class TrackEditActivity extends AbstractMyTracksActivity
         public void onClick(View v) {
           // Deletes the track.
           myTracksProviderUtils.deleteTrack(track.getId());
+          // Broadcasts delete track 
+          Intent intent = new Intent().setAction(getString(R.string.track_deleted_broadcast_action)).putExtra(getString(R.string.track_id_broadcast_extra), trackId);
+          sendBroadcast(intent, getString(R.string.permission_notification_value));
+          
           finish();
         }
       });     

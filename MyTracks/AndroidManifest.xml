@@ -12,7 +12,10 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+limitations under the License.
+
+
+
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.maps.mytracks"
@@ -241,6 +244,7 @@ limitations under the License.
         <activity android:name="com.google.android.apps.mytracks.settings.SharingSettingsActivity" />
         <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
         <activity android:name="com.google.android.apps.mytracks.settings.PaceSettingsActivity" />
+        <activity android:name="com.google.android.apps.mytracks.GamificationActivity" />
         <activity
             android:name="com.google.android.apps.mytracks.widgets.TrackWidgetConfigActivity"
             android:label="@string/track_widget_config_title" >
@@ -260,6 +264,7 @@ limitations under the License.
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
+        <service android:name="com.google.android.apps.mytracks.services.GamificationService" />
         <service android:name="com.google.android.apps.mytracks.services.ActivityRecognitionIntentService" />
         <service
             android:name="com.google.android.apps.mytracks.services.ControlRecordingService"
@@ -318,4 +323,7 @@ limitations under the License.
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
     </application>
+    
+    
+  
 </manifest>

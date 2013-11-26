@@ -1195,8 +1195,7 @@ public class TrackRecordingService extends Service {
    * @param trackId the track id
    */
   private void sendTrackBroadcast(int actionId, long trackId) {
-    Intent intent = new Intent().setAction(getString(actionId))
-        .putExtra(getString(R.string.track_id_broadcast_extra), trackId);
+    Intent intent = new Intent().setAction(getString(actionId)).putExtra(getString(R.string.track_id_broadcast_extra), trackId);
     sendBroadcast(intent, getString(R.string.permission_notification_value));
     if (PreferencesUtils.getBoolean(
         this, R.string.allow_access_key, PreferencesUtils.ALLOW_ACCESS_DEFAULT)) {

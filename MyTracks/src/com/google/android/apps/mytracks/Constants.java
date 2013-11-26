@@ -58,6 +58,11 @@ public class Constants {
   public static final String SETTINGS_NAME = "SettingsActivity";
 
   /**
+   * Name of the SharedPreferences that tracks completed achievements.
+   */
+  public static final String COMPLETED_CHALLENGES = "SettingsActivity";
+  
+  /**
    * The log tag.
    */
   public static final String TAG = "MyTracks";

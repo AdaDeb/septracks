@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<Challenges>
+    <Challenge>
+        <id>1</id>
+        <lengthLastTrack>10</lengthLastTrack>
+        <message>You just ran 10m biaaaaatch!</message>
+        <title>Running 10m!</title>
+    </Challenge>
+    <Challenge>
+        <id>2</id>
+        <lengthLastTrack>100</lengthLastTrack>
+        <message>Duuuuude you just ran 100m!</message>
+        <title>Running 100m!</title>
+    </Challenge>
+    <Challenge>
+        <id>3</id>
+		<lengthTotal>200</lengthTotal>
+        <message>Duuuuude you've just ran a total of 200m!</message>
+       	<title>Running totally 200m!</title>
+    </Challenge>    
+    <Challenge>
+        <id>4</id>
+		<totalTrips>2</totalTrips>
+        <message>Duuuuude you've just had 2 total trips - go you!</message>
+        <title>Make a total of 2 trips!</title>
+    </Challenge>
+</Challenges>
