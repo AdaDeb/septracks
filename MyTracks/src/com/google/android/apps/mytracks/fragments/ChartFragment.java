@@ -86,13 +86,10 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       if (!isResumed() || trackDataHub == null) {
         return;
       }
-
       zoomControls.setIsZoomInEnabled(chartView.canZoomIn());
       zoomControls.setIsZoomOutEnabled(chartView.canZoomOut());
       chartView.setShowPointer(isSelectedTrackRecording());
       chartView.invalidate();
-      //TODO: save picture to file here, used for facebook photo sharing
-      chartView.saveChartPhoto();
     }
   };
 

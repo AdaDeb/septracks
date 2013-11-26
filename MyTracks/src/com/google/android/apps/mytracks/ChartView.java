@@ -38,7 +38,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -1007,8 +1006,10 @@ public class ChartView extends View {
     return metricUnits;
   }
 
-  //TODO: comment
-  public void saveChartPhoto() {
+  /*
+   * Saves a bitmap representation of the chart view
+   */   
+  public Bitmap saveChartPhoto() {
     getRootView();
     setDrawingCacheEnabled(true);
     Bitmap chartBitmap = getDrawingCache();
@@ -1020,12 +1021,14 @@ public class ChartView extends View {
       chartBitmap.compress(Bitmap.CompressFormat.JPEG, 100, file);
       file.flush();
       file.close();
-      MediaStore.Images.Media.insertImage(this.getContext().getContentResolver(), chartBitmap, "Screen", "screen");
+      return chartBitmap;
+      //MediaStore.Images.Media.insertImage(this.getContext().getContentResolver(), chartBitmap, "Screen", "screen");
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    return chartBitmap;
   }
 
 }
