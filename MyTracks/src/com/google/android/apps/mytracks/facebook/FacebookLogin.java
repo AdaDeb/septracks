@@ -7,6 +7,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.google.android.apps.mytracks.fragments.ChartFragment;
 import com.google.android.maps.mytracks.R;
 
 import android.app.Activity;
@@ -15,9 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -55,7 +54,6 @@ public class FacebookLogin extends Activity {
       @Override
       public void call(Session session, SessionState state, Exception exception) {
         if (session.isOpened()) {
-
           // make request to the /me API
           Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
             
@@ -71,16 +69,16 @@ public class FacebookLogin extends Activity {
           });
         }
       }
-    });
-
-    onClickPostPhoto();
+    });    
+  onClickPostPhoto();
     }
+    
   }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
-    firstRun = false;
+   // firstRun = false;
   }
   
   @Override
@@ -121,13 +119,11 @@ public class FacebookLogin extends Activity {
 
   private void postPhoto() {
     if (hasPublishPermission()) {
-      //TODO: get bitmap in other way
       // load picture of chart from storage
-      String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
-      Bitmap image = BitmapFactory.decodeFile(mytracksimg);
-      System.out.println("Path: " + mytracksimg);
-
-      //Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.com_facebook_logo);
+      Bitmap image = ChartFragment.chartView.saveChartPhoto();
+      // String mytracksimg = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mytracks_chart.jpg";
+      // Bitmap image = BitmapFactory.decodeFile(mytracksimg);
+      
       Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), image, new Request.Callback() {
         @Override
         public void onCompleted(Response response) {
