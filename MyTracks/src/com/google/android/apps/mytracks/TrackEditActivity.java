@@ -80,8 +80,8 @@ public class TrackEditActivity extends AbstractMyTracksActivity
     int numBlockedCalls = getIntent().getIntExtra(NUM_BLOCKED_CALLS, -1);
     if(numBlockedCalls > 0){
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setTitle(R.string.call_blocked_popup_title);
-      builder.setMessage(numBlockedCalls + " " + getString(R.string.call_blocked_popup_message));
+      builder.setTitle("A call was blocked!");
+      builder.setMessage(numBlockedCalls + " " + " Call(s) were blocked!");
       builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
